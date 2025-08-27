@@ -10,19 +10,18 @@ class ProfilePage extends TeleKitPage {
 
         return `
             <div>
-                <TK_Header props='{"title": "User Profile"}' />
+                <TK_Header props='{"title": "TeleKit Pro"}' />
+                
+                <TK_Card props='{"title": "Welcome, ${TK.state.userProfile.name}", "content": "This app demonstrates advanced TeleKit features."}' />
+                
+                <!-- FIX: Use single quotes inside the onClick string -->
+                <TK_Button props='{"text": "View Profile", "onClick": "TK.navigateTo(\'profile\')"}' />
+                <TK_Button props='{"text": "Show Welcome Modal", "onClick": "TK.components.TK_Modal.show(\'welcomeModal\')"}' />
 
-                <div class="tk-card">
-                    <!-- USE THE NEW COMPONENT -->
-                    <TK_Input props='${JSON.stringify(inputProps)}' />
+                <h3>My Items:</h3>
+                <TK_List props='{"items": ${itemsJson}}' />
 
-                    <p style="margin-top: 10px; font-size: 16px;">
-                        <strong>Email:</strong> ${TK.state.userProfile.email}
-                    </p>
-                </div>
-
-                <TK_Button props='{"text": "Save Preference to Cloud", "onClick": "ProfilePage.saveToCloud()"}' />
-                <TK_Button props='{"text": "Load Preference from Cloud", "onClick": "ProfilePage.loadFromCloud()"}' />
+                <TK_Modal props='{"id": "welcomeModal", "title": "Hello!", "content": "This is a modal component."}' />
             </div>
         `;
     }
