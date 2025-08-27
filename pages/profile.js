@@ -1,27 +1,16 @@
 class ProfilePage extends TeleKitPage {
     render() {
-        // Prepare props for the TK_Input component
-        const inputProps = {
-            id: 'name-input',
-            label: 'User Name',
-            value: TK.state.userProfile.name,
-            onInput: 'ProfilePage.updateName(this.value)'
-        };
-
         return `
             <div>
-                <TK_Header props='{"title": "TeleKit Pro"}' />
-                
-                <TK_Card props='{"title": "Welcome, ${TK.state.userProfile.name}", "content": "This app demonstrates advanced TeleKit features."}' />
-                
-                <!-- FIX: Use single quotes inside the onClick string -->
-                <TK_Button props='{"text": "View Profile", "onClick": "TK.navigateTo(\'profile\')"}' />
-                <TK_Button props='{"text": "Show Welcome Modal", "onClick": "TK.components.TK_Modal.show(\'welcomeModal\')"}' />
+                <TK_Header props='{"title": "User Profile"}' />
 
-                <h3>My Items:</h3>
-                <TK_List props='{"items": ${itemsJson}}' />
+                <div class="tk-card">
+                    <p><strong>Name:</strong> <input type="text" id="name-input" value="${TK.state.userProfile.name}" oninput="ProfilePage.updateName(this.value)" /></p>
+                    <p><strong>Email:</strong> ${TK.state.userProfile.email}</p>
+                </div>
 
-                <TK_Modal props='{"id": "welcomeModal", "title": "Hello!", "content": "This is a modal component."}' />
+                <TK_Button props='{"text": "Save Preference to Cloud", "onClick": "ProfilePage.saveToCloud()"}' />
+                <TK_Button props='{"text": "Load Preference from Cloud", "onClick": "ProfilePage.loadFromCloud()"}' />
             </div>
         `;
     }

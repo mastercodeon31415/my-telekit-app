@@ -1,23 +1,45 @@
 class HomePage extends TeleKitPage {
     render() {
-        // Accessing global state to render the list
-        const itemsJson = JSON.stringify(TK.state.items);
+        // --- CORRECTED PART ---
+        // Build props as JavaScript objects first.
+        const headerProps = {
+            title: "TeleKit Pro"
+        };
+        const cardProps = {
+            title: `Welcome, ${TK.state.userProfile.name}`,
+            content: "This app demonstrates advanced TeleKit features."
+        };
+        const viewProfileButtonProps = {
+            text: "View Profile",
+            onClick: "TK.navigateTo('profile')" // Use single quotes for strings inside the action
+        };
+        const showModalButtonProps = {
+            text: "Show Welcome Modal",
+            onClick: "TK.components.TK_Modal.show('welcomeModal')" // Use single quotes here too
+        };
+        const listProps = {
+            items: TK.state.items
+        };
+        const modalProps = {
+            id: "welcomeModal",
+            title: "Hello!",
+            content: "This is a modal component."
+        };
 
+        // Now, safely stringify the objects into the component tags.
         return `
             <div>
-                <!-- Component Nesting Example -->
-                <TK_Header props='{"title": "TeleKit Pro With CSS NOW!"}' />
+                <TK_Header props='${JSON.stringify(headerProps)}' />
                 
-                <TK_Card props='{"title": "Welcome, ${TK.state.userProfile.name}", "content": "This app demonstrates advanced TeleKit features."}' />
+                <TK_Card props='${JSON.stringify(cardProps)}' />
                 
-                <TK_Button props='{"text": "View Profile", "onClick": "TK.navigateTo(\\"profile\\")"}' />
-                <TK_Button props='{"text": "Show Welcome Modal", "onClick": "TK.components.TK_Modal.show(\\"welcomeModal\\")"}' />
+                <TK_Button props='${JSON.stringify(viewProfileButtonProps)}' />
+                <TK_Button props='${JSON.stringify(showModalButtonProps)}' />
 
                 <h3>My Items:</h3>
-                <TK_List props='{"items": ${itemsJson}}' />
+                <TK_List props='${JSON.stringify(listProps)}' />
 
-                <!-- Modal is defined here but hidden by default -->
-                <TK_Modal props='{"id": "welcomeModal", "title": "Hello!", "content": "This is a modal component."}' />
+                <TK_Modal props='${JSON.stringify(modalProps)}' />
             </div>
         `;
     }
@@ -25,27 +47,24 @@ class HomePage extends TeleKitPage {
     onLoad() {
         TK.mainButton.setText('Add Item').show().onClick(() => {
             const newItem = `Item ${TK.state.items.length + 1}`;
-            // Update the global state, which will trigger a re-render
             TK.setState({ items: [...TK.state.items, newItem] });
             TK.hapticFeedback.notificationOccurred('success');
         });
 
         TK.backButton.hide();
         
-        // Example of fetching data from the backend
         this.fetchInitialData();
     }
 
     async fetchInitialData() {
-        // Using the built-in API utility
         const data = await TK.api.request('/get-user-data');
         if (data && data.user) {
-            // Update state with data from backend
             TK.setState({ userProfile: data.user });
         }
     }
 
     onLeave() {
-        TK.mainButton.offClick(this.onLoad); // Clean up listener
+        // It's good practice to clear the Main Button's specific handler when leaving a page.
+        TK.mainButton.offClick();
     }
 }
