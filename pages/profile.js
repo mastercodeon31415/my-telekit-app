@@ -1,12 +1,24 @@
 class ProfilePage extends TeleKitPage {
     render() {
+        // Prepare props for the TK_Input component
+        const inputProps = {
+            id: 'name-input',
+            label: 'User Name',
+            value: TK.state.userProfile.name,
+            onInput: 'ProfilePage.updateName(this.value)'
+        };
+
         return `
             <div>
                 <TK_Header props='{"title": "User Profile"}' />
 
                 <div class="tk-card">
-                    <p><strong>Name:</strong> <input type="text" id="name-input" value="${TK.state.userProfile.name}" oninput="ProfilePage.updateName(this.value)" /></p>
-                    <p><strong>Email:</strong> ${TK.state.userProfile.email}</p>
+                    <!-- USE THE NEW COMPONENT -->
+                    <TK_Input props='${JSON.stringify(inputProps)}' />
+
+                    <p style="margin-top: 10px; font-size: 16px;">
+                        <strong>Email:</strong> ${TK.state.userProfile.email}
+                    </p>
                 </div>
 
                 <TK_Button props='{"text": "Save Preference to Cloud", "onClick": "ProfilePage.saveToCloud()"}' />
