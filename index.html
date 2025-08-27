@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My TeleKit Pro App</title>
+    <link rel="stylesheet" href="telekit/telekit.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <!-- TeleKit Framework -->
+    <script src="telekit/telekit.js"></script>
+    <script src="telekit/components.js"></script>
+
+    <!-- App Pages -->
+    <script src="pages/home.js"></script>
+    <script src="pages/profile.js"></script>
+
+    <!-- App Initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize TeleKit with a global state and API URL
+            const TK = new TeleKit({
+                // Your Bot's backend API URL
+                apiBaseUrl: 'https://your-backend.com/api', 
+                // Initial global state
+                state: {
+                    userProfile: {
+                        name: 'Guest',
+                        email: 'Not set'
+                    },
+                    items: ['Item 1', 'Item 2', 'Item 3']
+                }
+            });
+
+            // Make TK globally accessible
+            window.TK = TK;
+
+            // Register components
+            registerTeleKitComponents(TK);
+
+            // Register pages
+            TK.addPage('home', new HomePage());
+            TK.addPage('profile', new ProfilePage());
+            
+            // Set the initial page
+            TK.navigateTo('home');
+        });
+    </script>
+</body>
+</html>
