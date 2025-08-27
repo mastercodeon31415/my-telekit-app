@@ -1,16 +1,43 @@
 class ProfilePage extends TeleKitPage {
     render() {
+        // --- CORRECTED PART ---
+        // Build props as JavaScript objects first for safety and clarity.
+        const headerProps = {
+            title: "User Profile"
+        };
+
+        const inputProps = {
+            id: 'name-input',
+            label: 'User Name',
+            value: TK.state.userProfile.name, // This now safely handles any special characters in the name
+            onInput: 'ProfilePage.updateName(this.value)'
+        };
+
+        const saveButtonProps = {
+            text: "Save Preference to Cloud",
+            onClick: "ProfilePage.saveToCloud()"
+        };
+        
+        const loadButtonProps = {
+            text: "Load Preference from Cloud",
+            onClick: "ProfilePage.loadFromCloud()"
+        };
+
+        // Now, safely stringify the objects into the component tags.
         return `
             <div>
-                <TK_Header props='{"title": "User Profile"}' />
+                <TK_Header props='${JSON.stringify(headerProps)}' />
 
                 <div class="tk-card">
-                    <p><strong>Name:</strong> <input type="text" id="name-input" value="${TK.state.userProfile.name}" oninput="ProfilePage.updateName(this.value)" /></p>
-                    <p><strong>Email:</strong> ${TK.state.userProfile.email}</p>
+                    <TK_Input props='${JSON.stringify(inputProps)}' />
+
+                    <p style="margin-top: 10px; font-size: 16px;">
+                        <strong>Email:</strong> ${TK.state.userProfile.email}
+                    </p>
                 </div>
 
-                <TK_Button props='{"text": "Save Preference to Cloud", "onClick": "ProfilePage.saveToCloud()"}' />
-                <TK_Button props='{"text": "Load Preference from Cloud", "onClick": "ProfilePage.loadFromCloud()"}' />
+                <TK_Button props='${JSON.stringify(saveButtonProps)}' />
+                <TK_Button props='${JSON.stringify(loadButtonProps)}' />
             </div>
         `;
     }
@@ -50,7 +77,8 @@ class ProfilePage extends TeleKitPage {
     }
 
     onLeave() {
-        TK.mainButton.offClick(this.onLoad);
-        TK.backButton.offClick(this.onLoad);
+        // Clean up all page-specific listeners
+        TK.mainButton.offClick();
+        TK.backButton.offClick();
     }
 }
