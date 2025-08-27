@@ -1,16 +1,23 @@
+// The incorrect line that breaks everything
+TK.backButton.onClick(this.goHomeHomeHandler); ```
+
+It should have been `this.goHomeHandler`, but I accidentally typed `goHome**Home**Handler`. Since `this.goHomeHomeHandler` doesn't exist, the JavaScript engine throws an `Uncaught TypeError`, and the entire app crashes.
+
+### The Fix: Correcting `pages/profile.js`
+
+We just need to correct that single line. For absolute certainty, please **replace the entire content** of your `pages/profile.js` file with this fully corrected version.
+
+```javascript
 // pages/profile.js
 
 class ProfilePage extends TeleKitPage {
-    // --- NEW: Define a constructor to hold the event handler ---
     constructor() {
         super();
-        // Define the handler once so we have a persistent reference for adding AND removing it.
-        // Both the Main button and Back button will perform the same action on this page.
+        // This handler is defined correctly here.
         this.goHomeHandler = () => TK.navigateTo('home');
     }
 
-    // The render method is already correct from our previous fix.
-    render(props = {}) { // Added props to match the new base class standard
+    render(props = {}) {
         const headerProps = { title: "User Profile" };
         const inputProps = {
             id: 'name-input',
@@ -36,13 +43,14 @@ class ProfilePage extends TeleKitPage {
         `;
     }
 
-    // --- UPDATED: Use the named handler ---
-    onLoad(props = {}) { // Added props to match the new base class standard
+    onLoad(props = {}) {
         TK.mainButton.setText('Go Home').show();
         TK.mainButton.onClick(this.goHomeHandler);
 
         TK.backButton.show();
-        TK.backButton.onClick(this.goHomeHomeHandler);
+        // --- THIS IS THE CORRECTED LINE ---
+        // It now correctly references the handler defined in the constructor.
+        TK.backButton.onClick(this.goHomeHandler);
     }
 
     // Static methods remain unchanged
@@ -66,7 +74,6 @@ class ProfilePage extends TeleKitPage {
         });
     }
 
-    // --- UPDATED: Correctly remove the named handler ---
     onLeave() {
         TK.mainButton.offClick(this.goHomeHandler);
         TK.backButton.offClick(this.goHomeHandler);
