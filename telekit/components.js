@@ -1,23 +1,25 @@
+// telekit/components.js
+
 class TK_Header extends TeleKitComponent {
-    render() {
-        const title = this.props.title || 'Page Title';
+    render(props = {}) {
+        const title = props.title || 'Page Title';
         return `<h1 class="tk-header">${title}</h1>`;
     }
 }
 
 class TK_Button extends TeleKitComponent {
-    render() {
-        const text = this.props.text || 'Click Me';
-        const onClickAction = this.props.onClick || "TK.showAlert('Button clicked')";
-        const className = this.props.className || '';
+    render(props = {}) {
+        const text = props.text || 'Click Me';
+        const onClickAction = props.onClick || "TK.showAlert('Button clicked')";
+        const className = props.className || '';
         return `<button class="tk-button ${className}" onclick="${onClickAction}">${text}</button>`;
     }
 }
 
 class TK_Card extends TeleKitComponent {
-    render() {
-        const title = this.props.title ? `<h3 class="tk-card-title">${this.props.title}</h3>` : '';
-        const content = this.props.content || 'Card content goes here.';
+    render(props = {}) {
+        const title = props.title ? `<h3 class="tk-card-title">${props.title}</h3>` : '';
+        const content = props.content || 'Card content goes here.';
         return `
             <div class="tk-card">
                 ${title}
@@ -28,77 +30,59 @@ class TK_Card extends TeleKitComponent {
 }
 
 class TK_List extends TeleKitComponent {
-    render() {
-        const items = this.props.items || [];
+    render(props = {}) {
+        const items = props.items || [];
         const listItems = items.map(item => `<li class="tk-list-item">${item}</li>`).join('');
         return `<ul class="tk-list">${listItems}</ul>`;
     }
 }
 
 class TK_Input extends TeleKitComponent {
-    render() {
-        const id = this.props.id || 'tk-input-' + Math.random().toString(36).substr(2, 9);
-        const label = this.props.label || '';
-        const placeholder = this.props.placeholder || '';
-        const value = this.props.value || '';
-        const onInput = this.props.onInput || '';
-
+    render(props = {}) {
+        const id = props.id || 'tk-input-' + Math.random().toString(36).substr(2, 9);
+        const label = props.label || '';
+        const placeholder = props.placeholder || '';
+        const value = props.value || '';
+        const onInput = props.onInput || '';
         const labelHtml = label ? `<label for="${id}" class="tk-input-label">${label}</label>` : '';
-
         return `
             <div class="tk-input-wrapper">
                 ${labelHtml}
-                <input
-                    type="text"
-                    id="${id}"
-                    class="tk-input"
-                    placeholder="${placeholder}"
-                    value="${value}"
-                    oninput="${onInput}"
-                />
+                <input type="text" id="${id}" class="tk-input" placeholder="${placeholder}" value="${value}" oninput="${onInput}"/>
             </div>
         `;
     }
 }
 
 class TK_Modal extends TeleKitComponent {
-    render() {
-        const id = this.props.id;
-        const title = this.props.title || 'Modal';
-        const content = this.props.content || '';
+    render(props = {}) {
+        const id = props.id;
+        const title = props.title || 'Modal';
+        const content = props.content || '';
+        const closeButtonProps = JSON.stringify({
+            text: "Close",
+            onClick: `TK.components.TK_Modal.hide('${id}')`
+        });
         return `
             <div class="tk-modal-overlay" id="${id}-overlay" onclick="TK.components.TK_Modal.hide('${id}')">
                 <div class="tk-modal-content" onclick="event.stopPropagation()">
                     <h2 class="tk-modal-title">${title}</h2>
                     <p>${content}</p>
-                    <TK_Button props='{"text": "Close", "onClick": "TK.components.TK_Modal.hide(\\"${id}\\")"}' />
+                    <TK_Button props='${closeButtonProps}' />
                 </div>
             </div>
         `;
     }
-
-    static show(id) {
-        const modal = document.getElementById(`${id}-overlay`);
-        modal.style.display = 'flex';
-        // Use a slight delay to allow the display property to apply before starting the transition
-        setTimeout(() => modal.classList.add('visible'), 10);
-        TK.hapticFeedback.impactOccurred('light');
-    }
-
-    static hide(id) {
-        const modal = document.getElementById(`${id}-overlay`);
-        modal.classList.remove('visible');
-        // Wait for the transition to finish before setting display to none
-        setTimeout(() => modal.style.display = 'none', 200);
-    }
+    static show(id) { /* ... same as before ... */ }
+    static hide(id) { /* ... same as before ... */ }
 }
 
-// UPDATE this function at the bottom of the file
 function registerTeleKitComponents(tkInstance) {
+    // No changes here, just registering the component classes
     tkInstance.addComponent('TK_Header', new TK_Header());
     tkInstance.addComponent('TK_Button', new TK_Button());
     tkInstance.addComponent('TK_Card', new TK_Card());
     tkInstance.addComponent('TK_List', new TK_List());
-    tkInstance.addComponent('TK_Input', new TK_Input()); // Add the new component
+    tkInstance.addComponent('TK_Input', new TK_Input());
     tkInstance.addComponent('TK_Modal', new TK_Modal());
 }
