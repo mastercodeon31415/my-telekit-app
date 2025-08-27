@@ -6,7 +6,7 @@ class HomePage extends TeleKitPage {
         return `
             <div>
                 <!-- Component Nesting Example -->
-                <TK_Header props='{"title": "TeleKit Pro"}' />
+                <TK_Header props='{"title": "TeleKit Pro App 1"}' />
                 
                 <TK_Card props='{"title": "Welcome, ${TK.state.userProfile.name}", "content": "This app demonstrates advanced TeleKit features."}' />
                 
