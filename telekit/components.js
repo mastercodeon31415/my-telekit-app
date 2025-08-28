@@ -1,7 +1,7 @@
 // telekit/components.js
 
 class TK_Header extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const title = props.title || 'Page Title';
         return `<h1 class="tk-header">${title}</h1>`;
@@ -9,7 +9,7 @@ class TK_Header extends TeleKitComponent {
 }
 
 class TK_Button extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const text = props.text || 'Click Me';
         const onClickAction = props.onClick || "TK.showAlert('Button clicked')";
@@ -19,7 +19,7 @@ class TK_Button extends TeleKitComponent {
 }
 
 class TK_Card extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const title = props.title ? `<h3 class="tk-card-title">${props.title}</h3>` : '';
         const content = props.content || 'Card content goes here.';
@@ -33,7 +33,7 @@ class TK_Card extends TeleKitComponent {
 }
 
 class TK_List extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const items = props.items || [];
         const listItems = items.map(item => `<li class="tk-list-item">${item}</li>`).join('');
@@ -42,7 +42,7 @@ class TK_List extends TeleKitComponent {
 }
 
 class TK_Input extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const id = props.id || 'tk-input-' + Math.random().toString(36).substr(2, 9);
         const label = props.label || '';
@@ -60,7 +60,7 @@ class TK_Input extends TeleKitComponent {
 }
 
 class TK_Modal extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const id = props.id;
         const title = props.title || 'Modal';
@@ -84,7 +84,7 @@ class TK_Modal extends TeleKitComponent {
 }
 
 class TK_NavBar extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const activeTab = props.active || 'home';
         const tabs = [
@@ -110,7 +110,7 @@ class TK_NavBar extends TeleKitComponent {
 
 class TK_Navigation extends TeleKitComponent {
     constructor(tk) {
-        super(tk); this.tk = tk;
+        super(tk);
     }
     
     render(props = {}) {
@@ -196,7 +196,7 @@ class TK_Navigation extends TeleKitComponent {
 }
 
 class TK_Toggle extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const label = props.label || '';
         const checked = props.checked ? 'checked' : '';
@@ -214,7 +214,7 @@ class TK_Toggle extends TeleKitComponent {
 }
 
 class TK_Checkbox extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const label = props.label || '';
         const checked = props.checked ? 'checked' : '';
@@ -234,7 +234,7 @@ class TK_Checkbox extends TeleKitComponent {
 }
 
 class TK_Select extends TeleKitComponent {
-	constructor(tk) { super(tk); this.tk = tk; }
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const label = props.label || '';
         const selectedValue = props.selectedValue || '';
@@ -259,15 +259,14 @@ class TK_Select extends TeleKitComponent {
 
 function registerTeleKitComponents(tkInstance) {
     // No changes here, just registering the component classes
-    tkInstance.addComponent('TK_Header', new TK_Header());
-    tkInstance.addComponent('TK_Button', new TK_Button());
-    tkInstance.addComponent('TK_Card', new TK_Card());
-    tkInstance.addComponent('TK_List', new TK_List());
-    tkInstance.addComponent('TK_Input', new TK_Input());
-    tkInstance.addComponent('TK_Modal', new TK_Modal());
-	tkInstance.addComponent('TK_NavBar', new TK_NavBar());
-	tkInstance.addComponent('TK_Navigation', new TK_Navigation());
-    tkInstance.addComponent('TK_Toggle', new TK_Toggle());
-    tkInstance.addComponent('TK_Checkbox', new TK_Checkbox());
-    tkInstance.addComponent('TK_Select', new TK_Select());
+    tkInstance.addComponent('TK_Header', TK_Header);
+    tkInstance.addComponent('TK_Button', TK_Button);
+    tkInstance.addComponent('TK_Card', TK_Card);
+    tkInstance.addComponent('TK_List', TK_List);
+    tkInstance.addComponent('TK_Input', TK_Input);
+    tkInstance.addComponent('TK_Modal', TK_Modal);
+    tkInstance.addComponent('TK_Navigation', TK_Navigation);
+    tkInstance.addComponent('TK_Toggle', TK_Toggle);
+    tkInstance.addComponent('TK_Checkbox', TK_Checkbox);
+    tkInstance.addComponent('TK_Select', TK_Select);
 }

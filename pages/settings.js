@@ -1,9 +1,6 @@
 // pages/settings.js
 
 class SettingsPage extends TeleKitPage {
-        constructor(tk) {
-        super(tk); // Pass tk to the parent
-		}
 
     render(props = {}) {
         const nav = this._c('TK_Navigation', { active: "settings", title: "Settings" });
@@ -56,9 +53,9 @@ class SettingsPage extends TeleKitPage {
     }
 
     onLoad(props = {}) {
-        this.mainButton.hide();
-        this.secondaryButton.hide();
-        this.backButton.hide();
+        this.tk.mainButton.hide();
+        this.tk.secondaryButton.hide();
+        this.tk.backButton.hide();
     }
 
     static handleSettingChange(key, value) {

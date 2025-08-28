@@ -56,10 +56,10 @@
             registerTeleKitComponents(TK);
 
             // Register pages
-            TK.addPage('home', new HomePage(TK));
-            TK.addPage('profile', new ProfilePage(TK));
-			TK.addPage('settings', new SettingsPage(TK)); // Add new page
-            TK.addPage('about', new AboutPage(TK));       // Add new page
+            TK.addPage('home', HomePage);
+            TK.addPage('profile', ProfilePage);
+            TK.addPage('settings', SettingsPage);
+            TK.addPage('about', AboutPage);
 			
             // Set the initial page
             TK.navigateTo('home');

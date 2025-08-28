@@ -47,8 +47,11 @@ class TeleKit {
         }
     }
 
-    addPage(name, page) { this.pages[name] = page; }
-    addComponent(name, component) { this.components[name] = component; }
+    addPage(name, pageClass) { this.pages[name] = pageClass; }
+	
+	addComponent(name, componentClass) {
+        this.components[name] = componentClass;
+    }
 
     navigateTo(pageName, props = {}) {
         if (this.currentPage && this.currentPage.onLeave) this.currentPage.onLeave();
@@ -67,21 +70,26 @@ class TeleKit {
         const appContainer = document.getElementById('app');
         
         // --- NEW RENDERING LOGIC ---
-        const renderData = this.currentPage.render(this.currentPageProps);
+        // Create a new instance of the page, injecting `this` (the TK instance)
+        const pageInstance = new this.currentPage(this);
+        const renderData = pageInstance.render(this.currentPageProps);
         appContainer.innerHTML = renderData.html;
 
         if (renderData.componentMap) {
             for (const id in renderData.componentMap) {
                 const { componentName, props } = renderData.componentMap[id];
                 const placeholder = document.getElementById(id);
-                if (placeholder && this.components[componentName]) {
-                    const componentInstance = this.components[componentName];
+                const componentClass = this.components[componentName]; // Get the class
+                if (placeholder && componentClass) {
+                    // Create a new instance of the component, injecting `this`
+                    const componentInstance = new componentClass(this);
                     placeholder.outerHTML = componentInstance.render(props);
                 }
             }
         }
 
-        if (this.currentPage.onLoad) this.currentPage.onLoad(this.currentPageProps);
+        // We now call onLoad on the new instance
+        if (pageInstance.onLoad) pageInstance.onLoad(this.currentPageProps);
     }
     
     // --- CORE APP WRAPPERS (Unchanged) ---

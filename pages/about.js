@@ -1,7 +1,4 @@
 class AboutPage extends TeleKitPage {
-        constructor(tk) {
-        super(tk); // Pass tk to the parent
-		}
 
     render(props = {}) {
         const nav = this._c('TK_Navigation', { active: "about", title: "About This App" });
@@ -16,9 +13,9 @@ class AboutPage extends TeleKitPage {
     }
 
     onLoad(props = {}) {
-        this.mainButton.hide();
-        this.secondaryButton.hide();
-        this.backButton.hide();
+        this.tk.mainButton.hide();
+        this.tk.secondaryButton.hide();
+        this.tk.backButton.hide();
     }
     
     onLeave() {}

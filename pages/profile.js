@@ -1,7 +1,4 @@
 class ProfilePage extends TeleKitPage {
-    constructor(tk) {
-	super(tk); // Pass tk to the parent
-	}
 
     render(props = {}) {
         const nav = this._c('TK_Navigation', { active: "profile", title: "User Profile" });
@@ -23,9 +20,9 @@ class ProfilePage extends TeleKitPage {
     }
 
     onLoad(props = {}) {
-        this.mainButton.hide();
-        this.secondaryButton.hide();
-        this.backButton.hide();
+        this.tk.mainButton.hide();
+        this.tk.secondaryButton.hide();
+        this.tk.backButton.hide();
     }
     
     static updateName(newName) { TK.setState({ userProfile: { ...TK.state.userProfile, name: newName } }); }
