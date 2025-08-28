@@ -1,17 +1,25 @@
-class ProfilePage extends TeleKitPage {
+// pages/profile.js
 
+class ProfilePage extends TeleKitPage {
+    // constructor is not needed
+    
     render(props = {}) {
         const nav = this._c('TK_Navigation', { active: "profile", title: "User Profile" });
-        const input = this._c('TK_Input', { id: 'name-input', label: 'User Name', value: TK.state.userProfile.name, onInput: 'ProfilePage.updateName(this.value)' });
-        const saveButton = this._c('TK_Button', { text: "Save Preference to Cloud", onClick: "ProfilePage.saveToCloud()" });
-        const loadButton = this._c('TK_Button', { text: "Load Preference from Cloud", onClick: "ProfilePage.loadFromCloud()" });
+        const input = this._c('TK_Input', { 
+            id: 'name-input', 
+            label: 'User Name', 
+            value: this.tk.state.userProfile.name, 
+            onInput: 'ProfilePage.updateName(this.value)' 
+        });
+        const saveButton = this._c('TK_Button', { text: "Save Profile to Cloud", onClick: "ProfilePage.saveToCloud()" }); // Updated text
+        const loadButton = this._c('TK_Button', { text: "Load Profile from Cloud", onClick: "ProfilePage.loadFromCloud()" }); // Updated text
 
         return this._render(`
             <div>
                 ${nav}
                 <div class="tk-card">
                     ${input}
-                    <p style="margin-top: 10px; font-size: 16px;"><strong>Email:</strong> ${TK.state.userProfile.email}</p>
+                    <p style="margin-top: 10px; font-size: 16px;"><strong>Email:</strong> ${this.tk.state.userProfile.email}</p>
                 </div>
                 ${saveButton}
                 ${loadButton}
@@ -25,30 +33,48 @@ class ProfilePage extends TeleKitPage {
         this.tk.backButton.hide();
     }
     
-    static updateName(newName) { TK.setState({ userProfile: { ...TK.state.userProfile, name: newName } }); }
+    static updateName(newName) {
+        TK.setState({ userProfile: { ...TK.state.userProfile, name: newName } });
+    }
+
+    // --- UPGRADED SAVE FUNCTION ---
     static saveToCloud() {
-        // Use the global TK instance to access CloudStorage
-        TK.cloudStorage.setItem('user_name', TK.state.userProfile.name, (err, success) => {
+        // Convert the entire userProfile object to a JSON string to save it
+        const profileJson = JSON.stringify(TK.state.userProfile);
+        
+        TK.cloudStorage.setItem('user_profile', profileJson, (err, success) => {
             if (success) {
-                TK.showAlert('Name saved to cloud storage!');
+                TK.showAlert('Profile saved to cloud storage!');
                 TK.hapticFeedback.notificationOccurred('success');
             } else {
-                TK.showAlert(`Error saving to cloud: ${err}`);
+                TK.showAlert(`Error saving profile: ${err}`);
             }
         });
     }
 
+    // --- UPGRADED LOAD FUNCTION ---
     static loadFromCloud() {
-        // Use the global TK instance to access CloudStorage
-        TK.cloudStorage.getItem('user_name', (err, value) => {
-            if (value) {
-                TK.showAlert(`Loaded "${value}" from cloud.`);
-                // Call the static updateName method to update the state
-                ProfilePage.updateName(value);
+        TK.cloudStorage.getItem('user_profile', (err, profileJson) => {
+            if (err) {
+                TK.showAlert(`Error loading profile: ${err}`);
+                return;
+            }
+
+            if (profileJson) {
+                try {
+                    // Parse the JSON string back into an object
+                    const savedProfile = JSON.parse(profileJson);
+                    // Update the entire state with the loaded profile
+                    TK.setState({ userProfile: savedProfile });
+                    TK.showAlert(`Loaded profile for "${savedProfile.name}" from cloud.`);
+                } catch (e) {
+                    TK.showAlert('Failed to parse saved profile data.');
+                }
             } else {
-                TK.showAlert(`Could not load from cloud: ${err || 'No value set'}`);
+                TK.showAlert('No saved profile found in cloud.');
             }
         });
     }
+
     onLeave() {}
 }

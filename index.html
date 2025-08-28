@@ -63,6 +63,32 @@
 			
             // Set the initial page
             TK.navigateTo('home');
+			
+            // This function runs once when the app starts up
+            function loadInitialData() {
+                TK.cloudStorage.getItem('user_profile', (err, profileJson) => {
+                    if (err) {
+                        console.error('Failed to load initial data:', err);
+                        return;
+                    }
+                    if (profileJson) {
+                        try {
+                            const savedProfile = JSON.parse(profileJson);
+                            console.log('Initial data loaded from cloud:', savedProfile);
+                            // Silently update the state without an alert
+                            TK.setState({ userProfile: savedProfile });
+                        } catch (e) {
+                            console.error('Failed to parse initial data:', e);
+                        }
+                    } else {
+                        console.log('No initial data found in cloud.');
+                    }
+                });
+            }
+
+            // Run the loader function
+            loadInitialData();
+
         });
     </script>
 </body>
