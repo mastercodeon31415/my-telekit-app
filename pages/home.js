@@ -24,16 +24,16 @@ class HomePage extends TeleKitPage {
 
     onLoad() {
         this.tk.mainButton.setText('Add Item');
-        this.tk.mainButton.offClick(addItemHandler);
-        this.tk.mainButton.onClick(addItemHandler);
+        this.tk.mainButton.offClick(this.addItemHandler);
+        this.tk.mainButton.onClick(this.addItemHandler);
         this.tk.mainButton.show();
         this.tk.secondaryButton.hide();
         this.tk.backButton.hide();
-        if (!initialDataFetched) { initialDataFetched = true; }
+        if (!this.initialDataFetched) { this.initialDataFetched = true; }
     }
     
     onLeave() {
         this.tk.mainButton.offClick(addItemHandler);
-        initialDataFetched = false;
+        this.initialDataFetched = false;
     }
 }

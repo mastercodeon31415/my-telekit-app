@@ -111,10 +111,14 @@ class TK_NavBar extends TeleKitComponent {
 class TK_Navigation extends TeleKitComponent {
     constructor(tk) {
         super(tk);
+		
+        // Register this specific instance with the main framework
+        // This is the key that connects the instance to the controller
+        this.tk.navigation = this;
     }
     
     render(props = {}) {
-		console.log(this.tk); // Add this line
+		
         if (this.tk.config.navStyle === 'drawer') {
             return this.renderDrawer(props);
         } else {
@@ -128,7 +132,8 @@ class TK_Navigation extends TeleKitComponent {
 
         return `
             <div class="tk-top-bar">
-                <button class="tk-hamburger-button" onclick="TK.components.TK_Navigation.openDrawer()">
+                <!-- THIS ONCLICK IS NOW FIXED -->
+                <button class="tk-hamburger-button" onclick="TK.openDrawer()">
                     <span></span><span></span><span></span>
                 </button>
                 <h1 class="tk-top-bar-title">${title}</h1>
@@ -136,8 +141,7 @@ class TK_Navigation extends TeleKitComponent {
         `;
     }
 
-    // Renders the hidden drawer menu into its own container
-    renderDrawerMenu(activeTab) {
+        renderDrawerMenu(activeTab) {
         const drawerContainer = document.getElementById('drawer-container');
         if (!drawerContainer) return;
 
@@ -150,16 +154,16 @@ class TK_Navigation extends TeleKitComponent {
 
         const linksHtml = tabs.map(tab => {
             const activeClass = (tab.id === activeTab) ? 'active' : '';
-            return `<a class="tk-drawer-link ${activeClass}" onclick="TK_Navigation.handleLinkClick('${tab.id}')">${tab.label}</a>`;
+            // --- THIS IS THE CORRECTED LINE ---
+            // It now correctly calls the global TK controller method
+            return `<a class="tk-drawer-link ${activeClass}" onclick="TK.handleNavLinkClick('${tab.id}')">${tab.label}</a>`;
         }).join('');
 
         drawerContainer.innerHTML = `
-            <div class="tk-drawer-overlay" id="drawer-overlay" onclick="TK_Navigation.closeDrawer()"></div>
+            <div class="tk-drawer-overlay" id="drawer-overlay" onclick="TK.closeDrawer()"></div>
             <div class="tk-drawer-panel" id="drawer-panel">
                 <h2 class="tk-drawer-header">Menu</h2>
-                <div class="tk-drawer-links">
-                    ${linksHtml}
-                </div>
+                <div class="tk-drawer-links">${linksHtml}</div>
             </div>
         `;
     }
@@ -173,23 +177,19 @@ class TK_Navigation extends TeleKitComponent {
         return `<div class="tk-navbar">${buttonsHtml}</div>`;
     }
 
-    // --- METHODS ARE NO LONGER STATIC ---
+    // --- These are now regular instance methods, called by the TK controller ---
     openDrawer() {
         document.getElementById('drawer-overlay')?.classList.add('visible');
         document.getElementById('drawer-panel')?.classList.add('visible');
-        // Use the injected tk instance!
         this.tk.hapticFeedback.impactOccurred('light'); 
     }
-
     closeDrawer() {
         document.getElementById('drawer-overlay')?.classList.remove('visible');
         document.getElementById('drawer-panel')?.classList.remove('visible');
     }
-
     handleLinkClick(pageName) {
         this.closeDrawer();
         setTimeout(() => {
-            // Use the injected tk instance!
             this.tk.navigateTo(pageName);
         }, 200);
     }

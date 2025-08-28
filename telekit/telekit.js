@@ -10,6 +10,9 @@ class TeleKit {
         this.components = {};
         this.currentPage = null;
         this.currentPageProps = {};
+		
+        // --- ADD THIS PROPERTY ---
+        this.navigation = null; // Will hold the active navigation component instance
 
         this._state = new Proxy(config.state || {}, {
             set: (target, property, value) => {
@@ -91,10 +94,45 @@ class TeleKit {
         // We now call onLoad on the new instance
         if (pageInstance.onLoad) pageInstance.onLoad(this.currentPageProps);
     }
+	
+	openDrawer() {
+        if (this.navigation && this.navigation.openDrawer) {
+            this.navigation.openDrawer();
+        }
+    }
+    closeDrawer() {
+        if (this.navigation && this.navigation.closeDrawer) {
+            this.navigation.closeDrawer();
+        }
+    }
+    handleNavLinkClick(pageName) {
+        if (this.navigation && this.navigation.handleLinkClick) {
+            this.navigation.handleLinkClick(pageName);
+        }
+    }
     
-    // --- CORE APP WRAPPERS (Unchanged) ---
+    // Core App Wrappers & UI Buttons
     updateTheme() { document.documentElement.className = this.app.colorScheme; }
-    // ... all other helper methods remain the same ...
+    get initDataUnsafe() { return this.app.initDataUnsafe; }
+    showAlert(message) { this.app.showAlert(message); }
+    showConfirm(message, callback) { this.app.showConfirm(message, callback); }
+    showPopup(params, callback) { this.app.showPopup(params, callback); }
+    expand() { this.app.expand(); }
+    close() { this.app.close(); }
+
+    // Button Getters
+    get mainButton() { return this.app.MainButton; }
+    get backButton() { return this.app.BackButton; }
+    get settingsButton() { return this.app.SettingsButton; }
+    get secondaryButton() { return this.app.SecondaryButton; }
+
+    // Advanced Feature Getters
+    get hapticFeedback() { return this.app.HapticFeedback; }
+    get cloudStorage() { return this.app.CloudStorage; }
+    get biometricManager() { return this.app.BiometricManager; }
+    get accelerometer() { return this.app.Accelerometer; }
+    get gyroscope() { return this.app.Gyroscope; }
+    get deviceOrientation() { return this.app.DeviceOrientation; }
 }
 
 class TeleKitComponent {
