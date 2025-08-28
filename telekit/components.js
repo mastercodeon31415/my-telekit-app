@@ -115,7 +115,7 @@ class TK_Navigation extends TeleKitComponent {
     }
     
     render(props = {}) {
-        if (this.tk.config.navStyle === 'drawer') {
+        if (this.config.navStyle === 'drawer') {
             return this.renderDrawer(props);
         } else {
             return this.renderBar(props);
