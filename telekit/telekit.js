@@ -11,6 +11,9 @@ class TeleKit {
         this.currentPage = null;
         this.currentPageProps = {};
 		
+		// We will now store the persistent instance of the current page
+        this.currentPageInstance = null; 
+		
         // --- ADD THIS PROPERTY ---
         this.navigation = null; // Will hold the active navigation component instance
 
