@@ -101,6 +101,96 @@ class TK_NavBar extends TeleKitComponent {
     }
 }
 
+// --- REPLACE TK_NavBar WITH THIS NEW TK_Navigation CLASS ---
+class TK_Navigation extends TeleKitComponent {
+    render(props = {}) {
+        // This component now decides what to render based on the global config
+        if (TK.config.navStyle === 'drawer') {
+            return this.renderDrawer(props);
+        } else { // Default to 'bar'
+            return this.renderBar(props);
+        }
+    }
+
+    // Renders the top bar with hamburger icon
+    renderDrawer(props) {
+        const title = props.title || 'TeleKit App';
+        const activeTab = props.active || 'home';
+
+        // The drawer itself will be rendered into the separate #drawer-container
+        // This is a "portal" pattern. We call a method to render it separately.
+        this.renderDrawerMenu(activeTab);
+
+        return `
+            <div class="tk-top-bar">
+                <button class="tk-hamburger-button" onclick="TK_Navigation.openDrawer()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <h1 class="tk-top-bar-title">${title}</h1>
+            </div>
+        `;
+    }
+
+    // Renders the hidden drawer menu into its own container
+    renderDrawerMenu(activeTab) {
+        const drawerContainer = document.getElementById('drawer-container');
+        if (!drawerContainer) return;
+
+        const tabs = [
+            { id: 'home', label: 'Home' },
+            { id: 'profile', label: 'Profile' },
+            { id: 'settings', label: 'Settings' },
+            { id: 'about', label: 'About' }
+        ];
+
+        const linksHtml = tabs.map(tab => {
+            const activeClass = (tab.id === activeTab) ? 'active' : '';
+            return `<a class="tk-drawer-link ${activeClass}" onclick="TK_Navigation.handleLinkClick('${tab.id}')">${tab.label}</a>`;
+        }).join('');
+
+        drawerContainer.innerHTML = `
+            <div class="tk-drawer-overlay" id="drawer-overlay" onclick="TK_Navigation.closeDrawer()"></div>
+            <div class="tk-drawer-panel" id="drawer-panel">
+                <h2 class="tk-drawer-header">Menu</h2>
+                <div class="tk-drawer-links">
+                    ${linksHtml}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Renders the bottom tab bar (the old logic)
+    renderBar(props) {
+        const activeTab = props.active || 'home';
+        // ... (the exact same render logic from the old TK_NavBar) ...
+        const tabs = [ /* ... */ ];
+        // ...
+        return `<div class="tk-navbar">${buttonsHtml}</div>`;
+    }
+
+    // --- Static methods to control the drawer from anywhere ---
+    static openDrawer() {
+        document.getElementById('drawer-overlay')?.classList.add('visible');
+        document.getElementById('drawer-panel')?.classList.add('visible');
+        TK.hapticFeedback.impactOccurred('light');
+    }
+
+    static closeDrawer() {
+        document.getElementById('drawer-overlay')?.classList.remove('visible');
+        document.getElementById('drawer-panel')?.classList.remove('visible');
+    }
+
+    static handleLinkClick(pageName) {
+        // First close the drawer, then navigate for a smooth UX
+        this.closeDrawer();
+        setTimeout(() => {
+            TK.navigateTo(pageName);
+        }, 200); // 200ms matches the CSS transition duration
+    }
+}
+
 function registerTeleKitComponents(tkInstance) {
     // No changes here, just registering the component classes
     tkInstance.addComponent('TK_Header', new TK_Header());
@@ -110,4 +200,5 @@ function registerTeleKitComponents(tkInstance) {
     tkInstance.addComponent('TK_Input', new TK_Input());
     tkInstance.addComponent('TK_Modal', new TK_Modal());
 	tkInstance.addComponent('TK_NavBar', new TK_NavBar());
+	tkInstance.addComponent('TK_Navigation', new TK_Navigation());
 }

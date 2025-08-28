@@ -2,6 +2,8 @@
 
 class TeleKit {
     constructor(config = {}) {
+		this.config = config; // Store the entire config object
+		
         this.app = Telegram.WebApp;
         this.app.ready();
 

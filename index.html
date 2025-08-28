@@ -8,6 +8,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
 </head>
 <body>
+    <div id="drawer-container"></div>
     <div id="app"></div>
 
     <!-- TeleKit Framework -->
@@ -25,6 +26,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize TeleKit with a global state and API URL
             const TK = new TeleKit({
+				// CHOOSE YOUR NAVIGATION STYLE HERE: 'drawer' or 'bar'
+                navStyle: 'drawer', 
+				
                 // Your Bot's backend API URL
                 apiBaseUrl: 'https://your-backend.com/api', 
                 // Initial global state

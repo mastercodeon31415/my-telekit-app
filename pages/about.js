@@ -11,14 +11,14 @@ class AboutPage extends TeleKitPage {
             title: "TeleKit Pro Framework",
             content: "This application is a demonstration of the TeleKit Pro framework for building modern Telegram Mini Apps."
         };
-        const navBarProps = { active: "about" };
+        const navBarProps = { active: "about", title: "About" };
 
         return `
             <div>
                 <TK_Header props='${JSON.stringify(headerProps)}' />
                 <TK_Card props='${JSON.stringify(cardProps)}' />
                 
-                <TK_NavBar props='${JSON.stringify(navBarProps)}' />
+                <TK_Navigation props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }

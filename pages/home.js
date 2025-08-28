@@ -15,7 +15,7 @@ class HomePage extends TeleKitPage {
         const headerProps = { title: "Home" }; // Changed title for clarity
         const cardProps = { title: `Welcome, ${TK.state.userProfile.name}`, content: "This is the main page of the application." };
         const listProps = { items: TK.state.items };
-        const navBarProps = { active: "home" };
+        const navBarProps = { active: "home", title: "Home" };
 
         return `
             <div>
@@ -23,7 +23,7 @@ class HomePage extends TeleKitPage {
                 <TK_Card props='${JSON.stringify(cardProps)}' />
                 <h3>My Items:</h3>
                 <TK_List props='${JSON.stringify(listProps)}' />
-                <TK_NavBar props='${JSON.stringify(navBarProps)}' />
+                <TK_Navigation props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }

@@ -8,7 +8,7 @@ class ProfilePage extends TeleKitPage {
     render(props = {}) {
         const headerProps = { title: "User Profile" };
         const inputProps = { id: 'name-input', label: 'User Name', value: TK.state.userProfile.name, onInput: 'ProfilePage.updateName(this.value)' };
-        const navBarProps = { active: "profile" };
+        const navBarProps = { active: "profile", title: "Profile" };
 
         return `
             <div>
@@ -20,7 +20,7 @@ class ProfilePage extends TeleKitPage {
                 <TK_Button props='{"text": "Save Preference to Cloud", "onClick": "ProfilePage.saveToCloud()"}' />
                 <TK_Button props='{"text": "Load Preference from Cloud", "onClick": "ProfilePage.loadFromCloud()"}' />
                 
-                <TK_NavBar props='${JSON.stringify(navBarProps)}' />
+                <TK_Navigation props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }

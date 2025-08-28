@@ -12,7 +12,7 @@ class SettingsPage extends TeleKitPage {
             title: "App Configuration",
             content: "Options and settings for the app will appear here."
         };
-        const navBarProps = { active: "settings" };
+        const navBarProps = { active: "settings", title: "Settings" };
 
         return `
             <div>
@@ -20,7 +20,7 @@ class SettingsPage extends TeleKitPage {
                 <TK_Card props='${JSON.stringify(cardProps)}' />
                 
                 <!-- This is our new navigation bar -->
-                <TK_NavBar props='${JSON.stringify(navBarProps)}' />
+                <TK_Navigation props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }
