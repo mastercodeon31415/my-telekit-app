@@ -86,11 +86,27 @@ class TeleKit {
         }
     }
 
+    // --- THIS IS THE CRITICAL FIX ---
     renderCurrentPage() {
         if (!this.currentPageInstance) return;
+
+        // 1. Remember what was focused (if anything)
+        let activeElementId = null;
+        let selectionStart = null;
+        let selectionEnd = null;
+        if (document.activeElement && document.activeElement.id) {
+            activeElementId = document.activeElement.id;
+            // Also remember the cursor position for text inputs
+            if (typeof document.activeElement.selectionStart === "number") {
+                selectionStart = document.activeElement.selectionStart;
+                selectionEnd = document.activeElement.selectionEnd;
+            }
+        }
         
         const appContainer = document.getElementById('app');
         const renderData = this.currentPageInstance.render(this.currentPageProps);
+        
+        // 2. Perform the destructive re-render
         appContainer.innerHTML = renderData.html;
 
         if (renderData.componentMap) {
@@ -104,7 +120,18 @@ class TeleKit {
                 }
             }
         }
-        // CRUCIALLY, we no longer call onLoad here
+        
+        // 3. Restore focus if we remembered an element
+        if (activeElementId) {
+            const newElement = document.getElementById(activeElementId);
+            if (newElement) {
+                newElement.focus();
+                // Restore the cursor position
+                if (selectionStart !== null && typeof newElement.setSelectionRange === "function") {
+                    newElement.setSelectionRange(selectionStart, selectionEnd);
+                }
+            }
+        }
     }
 	
 	openDrawer() {
