@@ -1,25 +1,16 @@
-// pages/about.js
-
 class AboutPage extends TeleKitPage {
-    constructor() {
-        super();
-    }
+    constructor() { super(); }
 
     render(props = {}) {
-        const headerProps = { title: "About This App" };
-        const cardProps = {
-            title: "TeleKit Pro Framework",
-            content: "This application is a demonstration of the TeleKit Pro framework for building modern Telegram Mini Apps."
-        };
-        const navBarProps = { active: "about", title: "About" };
+        const nav = this._c('TK_Navigation', { active: "about", title: "About This App" });
+        const card = this._c('TK_Card', { title: "TeleKit Pro Framework", content: "This application is a demonstration of the TeleKit Pro framework for building modern Telegram Mini Apps." });
 
-        return `
+        return this._render(`
             <div>
-				<TK_Navigation props='${JSON.stringify(navBarProps)}' />
-                <TK_Header props='${JSON.stringify(headerProps)}' />
-                <TK_Card props='${JSON.stringify(cardProps)}' />
+                ${nav}
+                ${card}
             </div>
-        `;
+        `);
     }
 
     onLoad(props = {}) {
@@ -27,6 +18,6 @@ class AboutPage extends TeleKitPage {
         TK.secondaryButton.hide();
         TK.backButton.hide();
     }
-
+    
     onLeave() {}
 }

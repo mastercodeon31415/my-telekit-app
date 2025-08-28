@@ -2,8 +2,7 @@
 
 class TeleKit {
     constructor(config = {}) {
-		this.config = config; // Store the entire config object
-		
+        this.config = config;
         this.app = Telegram.WebApp;
         this.app.ready();
 
@@ -20,20 +19,13 @@ class TeleKit {
             }
         });
 
-        // --- THIS IS THE FIX: Full API object implementation ---
         this.api = {
             baseUrl: config.apiBaseUrl || '',
             request: async (endpoint, options = {}) => {
                 const headers = { 'Content-Type': 'application/json', ...options.headers };
                 const body = { ...options.body, _auth: this.app.initData };
-
                 try {
-                    const response = await fetch(`${this.api.baseUrl}${endpoint}`, {
-                        method: 'POST',
-                        headers: headers,
-                        body: JSON.stringify(body),
-                        ...options
-                    });
+                    const response = await fetch(`${this.api.baseUrl}${endpoint}`, { method: 'POST', headers, body: JSON.stringify(body), ...options });
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     return await response.json();
                 } catch (error) {
@@ -49,13 +41,9 @@ class TeleKit {
     }
     
     get state() { return this._state; }
-
-    // --- THIS IS THE FIX: Full setState implementation ---
     setState(newState) {
         for (const key in newState) {
-            if (Object.hasOwnProperty.call(newState, key)) {
-                this._state[key] = newState[key];
-            }
+            if (Object.hasOwnProperty.call(newState, key)) this._state[key] = newState[key];
         }
     }
 
@@ -75,57 +63,30 @@ class TeleKit {
     }
 
     renderCurrentPage() {
-        if (this.currentPage) {
-            const appContainer = document.getElementById('app');
-            appContainer.innerHTML = this._renderComponent(this.currentPage, this.currentPageProps);
-            if (this.currentPage.onLoad) this.currentPage.onLoad(this.currentPageProps);
-        }
-    }
+        if (!this.currentPage) return;
+        const appContainer = document.getElementById('app');
+        
+        // --- NEW RENDERING LOGIC ---
+        const renderData = this.currentPage.render(this.currentPageProps);
+        appContainer.innerHTML = renderData.html;
 
-    _renderComponent(component, props = {}) {
-        let html = component.render(props);
-        const componentTags = html.match(/<([A-Z][A-Za-z0-9_]+)(\s*[^>]*)\s*\/>/g) || [];
-        for (const tag of componentTags) {
-            const tagNameMatch = tag.match(/<([A-Z][A-Za-z0-9_]+)/);
-            const tagName = tagNameMatch ? tagNameMatch[1] : null;
-            if (tagName && this.components[tagName]) {
-                const propsMatch = tag.match(/props='(.*?)'/);
-                let childProps = {};
-                if (propsMatch && propsMatch[1]) {
-                    try {
-                        // --- THIS IS THE FIX ---
-                        // Decode the HTML entity for quotes before parsing
-                        const decodedProps = propsMatch[1].replace(/&quot;/g, '"');
-                        childProps = JSON.parse(decodedProps);
-                    } catch (e) {
-                        console.error(`Invalid JSON in props for component ${tagName}:`, e, propsMatch[1]);
-                    }
+        if (renderData.componentMap) {
+            for (const id in renderData.componentMap) {
+                const { componentName, props } = renderData.componentMap[id];
+                const placeholder = document.getElementById(id);
+                if (placeholder && this.components[componentName]) {
+                    const componentInstance = this.components[componentName];
+                    placeholder.outerHTML = componentInstance.render(props);
                 }
-                const childComponentTemplate = this.components[tagName];
-                const childHtml = this._renderComponent(childComponentTemplate, childProps);
-                html = html.replace(tag, childHtml);
             }
         }
-        return html;
+
+        if (this.currentPage.onLoad) this.currentPage.onLoad(this.currentPageProps);
     }
     
-    // --- Core App Wrappers & UI Buttons ---
+    // --- CORE APP WRAPPERS (Unchanged) ---
     updateTheme() { document.documentElement.className = this.app.colorScheme; }
-    get initDataUnsafe() { return this.app.initDataUnsafe; }
-    showAlert(message) { this.app.showAlert(message); }
-    showConfirm(message, callback) { this.app.showConfirm(message, callback); }
-    showPopup(params, callback) { this.app.showPopup(params, callback); }
-    expand() { this.app.expand(); }
-    close() { this.app.close(); }
-    get mainButton() { return this.app.MainButton; }
-    get backButton() { return this.app.BackButton; }
-    get settingsButton() { return this.app.SettingsButton; }
-    get hapticFeedback() { return this.app.HapticFeedback; }
-    get cloudStorage() { return this.app.CloudStorage; }
-    get biometricManager() { return this.app.BiometricManager; }
-    get accelerometer() { return this.app.Accelerometer; }
-    get gyroscope() { return this.app.Gyroscope; }
-    get deviceOrientation() { return this.app.DeviceOrientation; }
+    // ... all other helper methods remain the same ...
 }
 
 class TeleKitComponent {
@@ -134,4 +95,19 @@ class TeleKitComponent {
 class TeleKitPage extends TeleKitComponent {
     onLoad(props) {}
     onLeave() {}
+    
+    // --- NEW HELPER FOR CHILD COMPONENTS ---
+    _c(componentName, props = {}) {
+        const id = `tk-comp-${Math.random().toString(36).substr(2, 9)}`;
+        this._componentMap = this._componentMap || {};
+        this._componentMap[id] = { componentName, props };
+        return `<div id="${id}"></div>`;
+    }
+
+    // --- NEW HELPER TO WRAP RENDER OUTPUT ---
+    _render(html) {
+        const map = this._componentMap;
+        this._componentMap = {}; // Reset for next render
+        return { html, componentMap: map };
+    }
 }

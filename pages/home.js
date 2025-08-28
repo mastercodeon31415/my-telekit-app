@@ -1,5 +1,3 @@
-// pages/home.js
-
 class HomePage extends TeleKitPage {
     constructor() {
         super();
@@ -12,48 +10,31 @@ class HomePage extends TeleKitPage {
     }
 
     render() {
-        const headerProps = { title: "Home" }; // Changed title for clarity
-        const cardProps = { title: `Welcome, ${TK.state.userProfile.name}`, content: "This is the main page of the application." };
-        const listProps = { items: TK.state.items };
-        const navBarProps = { active: "home", title: "Home" };
+        const nav = this._c('TK_Navigation', { active: "home", title: "Home" });
+        const card = this._c('TK_Card', { title: `Welcome, ${TK.state.userProfile.name}`, content: "This is the main page of the application." });
+        const list = this._c('TK_List', { items: TK.state.items });
 
-        return `
+        return this._render(`
             <div>
-				<TK_Navigation props='${JSON.stringify(navBarProps)}' />
-                <TK_Header props='${JSON.stringify(headerProps)}' />
-                <TK_Card props='${JSON.stringify(cardProps)}' />
+                ${nav}
+                ${card}
                 <h3>My Items:</h3>
-                <TK_List props='${JSON.stringify(listProps)}' />
+                ${list}
             </div>
-        `;
+        `);
     }
 
     onLoad() {
-        // The Main Button is now for page-specific actions, not navigation
         TK.mainButton.setText('Add Item');
-        TK.mainButton.offClick(this.addItemHandler); // Always remove before adding
+        TK.mainButton.offClick(this.addItemHandler);
         TK.mainButton.onClick(this.addItemHandler);
         TK.mainButton.show();
-
-        // Hide other native buttons
         TK.secondaryButton.hide();
         TK.backButton.hide();
-
-        if (!this.initialDataFetched) {
-            // this.fetchInitialData();
-            this.initialDataFetched = true;
-        }
+        if (!this.initialDataFetched) { this.initialDataFetched = true; }
     }
-
-    async fetchInitialData() {
-        const data = await TK.api.request('/get-user-data');
-        if (data && data.user) {
-            TK.setState({ userProfile: data.user });
-        }
-    }
-
+    
     onLeave() {
-        // Clean up page-specific listeners
         TK.mainButton.offClick(this.addItemHandler);
         this.initialDataFetched = false;
     }

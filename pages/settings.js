@@ -1,20 +1,12 @@
 // pages/settings.js
 
 class SettingsPage extends TeleKitPage {
-    constructor() {
-        super();
-    }
-    
-    // Helper function to safely stringify and encode props
-    encodeProps(props) {
-        return JSON.stringify(props).replace(/"/g, '&quot;');
-    }
+    constructor() { super(); }
 
     render(props = {}) {
-        const navProps = { active: "settings", title: "Settings" };
+        const nav = this._c('TK_Navigation', { active: "settings", title: "Settings" });
 
-        // --- GENERAL SETTINGS ---
-        const languageSelectProps = this.encodeProps({
+        const languageSelect = this._c('TK_Select', {
             label: "Language",
             selectedValue: TK.state.settings.language,
             onChange: "SettingsPage.handleSettingChange('language', this.value)",
@@ -25,47 +17,40 @@ class SettingsPage extends TeleKitPage {
             ]
         });
 
-        // --- NOTIFICATION SETTINGS ---
-        const notificationToggleProps = this.encodeProps({
+        const notificationToggle = this._c('TK_Toggle', {
             label: "Enable Notifications",
             checked: TK.state.settings.enableNotifications,
             onChange: "SettingsPage.handleSettingChange('enableNotifications', this.checked)"
         });
-        const previewsCheckboxProps = this.encodeProps({
+
+        const previewsCheckbox = this._c('TK_Checkbox', {
             label: "Show Message Previews",
             checked: TK.state.settings.showPreviews,
             onChange: "SettingsPage.handleSettingChange('showPreviews', this.checked)"
         });
-
-        const saveButtonProps = this.encodeProps({
+        
+        const saveButton = this._c('TK_Button', {
             text: "Save Settings",
             onClick: "SettingsPage.handleSave()"
         });
 
-        return `
+        return this._render(`
             <div>
-                <TK_Navigation props='${this.encodeProps(navProps)}' />
-
-                <!-- General Settings Category -->
+                ${nav}
                 <div class="tk-settings-category">
                     <h3 class="tk-settings-category-title">General</h3>
-                    <div class="tk-card">
-                        <TK_Select props='${languageSelectProps}' />
-                    </div>
+                    <div class="tk-card">${languageSelect}</div>
                 </div>
-
-                <!-- Notification Settings Category -->
                 <div class="tk-settings-category">
                     <h3 class="tk-settings-category-title">Notifications</h3>
                     <div class="tk-card">
-                        <TK_Toggle props='${notificationToggleProps}' />
-                        <TK_Checkbox props='${previewsCheckboxProps}' />
+                        ${notificationToggle}
+                        ${previewsCheckbox}
                     </div>
                 </div>
-                
-                <TK_Button props='${saveButtonProps}' />
+                ${saveButton}
             </div>
-        `;
+        `);
     }
 
     onLoad(props = {}) {
@@ -75,14 +60,12 @@ class SettingsPage extends TeleKitPage {
     }
 
     static handleSettingChange(key, value) {
-        TK.setState({
-            settings: { ...TK.state.settings, [key]: value }
-        });
+        TK.setState({ settings: { ...TK.state.settings, [key]: value } });
     }
 
     static handleSave() {
         console.log('Saving settings:', TK.state.settings);
-        TK.showAlert('Settings saved successfully! (Check the console)');
+        TK.showAlert('Settings saved successfully!');
         TK.hapticFeedback.notificationOccurred('success');
     }
 
