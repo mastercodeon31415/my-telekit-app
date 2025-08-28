@@ -5,20 +5,20 @@ TeleKit is a lightweight, component-based framework designed to simplify the dev
 This documentation will guide you through the core concepts, components, and functionalities of the TeleKit framework, using the provided example application as a reference.
 
 ## Table of Contents
-1.  [Getting Started](#getting-started)
+1.  [Getting Started](#1-getting-started)
     *   [Project Structure](#project-structure)
     *   [Core Files](#core-files)
-2.  [Framework Initialization](#framework-initialization)
+2.  [Framework Initialization](#2-framework-initialization)
     *   [Configuration](#configuration)
     *   [Registering Pages & Components](#registering-pages--components)
-3.  [The Core: `TeleKit.js`](#the-core-telekitjs)
+3.  [The Core: `TeleKit.js`](#3-the-core-telekitjs)
     *   [State Management](#state-management)
     *   [Navigation](#navigation)
     *   [Telegram API Wrappers](#telegram-api-wrappers)
-4.  [Creating Pages](#creating-pages)
+4.  [Creating Pages](#4-creating-pages)
     *   [Page Lifecycle](#page-lifecycle)
     *   [Rendering Components](#rendering-components)
-5.  [UI Components](#ui-components)
+5.  [UI Components](#5-ui-components)
     *   [`TK_Navigation`](#tk_navigation)
     *   [`TK_Card`](#tk_card)
     *   [`TK_List`](#tk_list)
@@ -27,7 +27,7 @@ This documentation will guide you through the core concepts, components, and fun
     *   [`TK_Toggle`](#tk_toggle)
     *   [`TK_Checkbox`](#tk_checkbox)
     *   [`TK_Select`](#tk_select)
-6.  [Styling Your App](#styling-your-app)
+6.  [Styling Your App](#6-styling-your-app)
 
 ---
 
