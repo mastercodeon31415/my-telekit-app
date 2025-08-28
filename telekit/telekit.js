@@ -87,30 +87,24 @@ class TeleKit {
     }
 
     renderCurrentPage() {
-        if (!this.currentPage) return;
-        const appContainer = document.getElementById('app');
+        if (!this.currentPageInstance) return;
         
-        // --- NEW RENDERING LOGIC ---
-        // Create a new instance of the page, injecting `this` (the TK instance)
-        const pageInstance = new this.currentPage(this);
-        const renderData = pageInstance.render(this.currentPageProps);
+        const appContainer = document.getElementById('app');
+        const renderData = this.currentPageInstance.render(this.currentPageProps);
         appContainer.innerHTML = renderData.html;
 
         if (renderData.componentMap) {
             for (const id in renderData.componentMap) {
                 const { componentName, props } = renderData.componentMap[id];
                 const placeholder = document.getElementById(id);
-                const componentClass = this.components[componentName]; // Get the class
+                const componentClass = this.components[componentName];
                 if (placeholder && componentClass) {
-                    // Create a new instance of the component, injecting `this`
                     const componentInstance = new componentClass(this);
                     placeholder.outerHTML = componentInstance.render(props);
                 }
             }
         }
-
-        // We now call onLoad on the new instance
-        // if (pageInstance.onLoad) pageInstance.onLoad(this.currentPageProps);
+        // CRUCIALLY, we no longer call onLoad here
     }
 	
 	openDrawer() {
