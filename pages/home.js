@@ -9,7 +9,7 @@ class HomePage extends TeleKitPage {
 
     render() {
         const nav = this._c('TK_Navigation', { active: "home", title: "Home" });
-        const card = this._c('TK_Card', { title: `Welcome, ${TK.state.userProfile.name}`, content: "This is the main page of the application." });
+        const card = this._c('TK_Card', { title: `Welcome, ${TK.state.userProfile.name}`, content: "Welcome to the first ever TeleKit app!" });
         const list = this._c('TK_List', { items: TK.state.items });
 
         return this._render(`
