@@ -89,7 +89,7 @@ class TeleKit {
             const tagNameMatch = tag.match(/<([A-Z][A-Za-z0-9_]+)/);
             const tagName = tagNameMatch ? tagNameMatch[1] : null;
             if (tagName && this.components[tagName]) {
-                const propsMatch = tag.match(/props='({[^']*})'/);
+                const propsMatch = tag.match(/props='(.*?)'/);
                 let childProps = {};
                 if (propsMatch && propsMatch[1]) {
                     try { childProps = JSON.parse(propsMatch[1]); } 

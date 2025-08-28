@@ -411,6 +411,7 @@ body {
     stroke-dasharray: 22;
     stroke-dashoffset: 22;
     transition: stroke-dashoffset 0.2s ease-in-out;
+    opacity: 0;
 }
 .tk-checkbox input:checked ~ .tk-checkbox-checkmark {
     background-color: var(--tg-theme-button-color);
@@ -418,6 +419,7 @@ body {
 }
 .tk-checkbox input:checked ~ .tk-checkbox-checkmark polyline {
     stroke-dashoffset: 0;
+	opacity: 1;
 }
 .tk-checkbox-label {
     margin-left: 12px;
