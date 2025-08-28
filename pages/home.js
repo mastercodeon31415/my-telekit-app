@@ -19,11 +19,11 @@ class HomePage extends TeleKitPage {
 
         return `
             <div>
+				<TK_Navigation props='${JSON.stringify(navBarProps)}' />
                 <TK_Header props='${JSON.stringify(headerProps)}' />
                 <TK_Card props='${JSON.stringify(cardProps)}' />
                 <h3>My Items:</h3>
                 <TK_List props='${JSON.stringify(listProps)}' />
-                <TK_Navigation props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }

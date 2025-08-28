@@ -15,10 +15,9 @@ class AboutPage extends TeleKitPage {
 
         return `
             <div>
+				<TK_Navigation props='${JSON.stringify(navBarProps)}' />
                 <TK_Header props='${JSON.stringify(headerProps)}' />
                 <TK_Card props='${JSON.stringify(cardProps)}' />
-                
-                <TK_Navigation props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }

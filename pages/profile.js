@@ -12,6 +12,7 @@ class ProfilePage extends TeleKitPage {
 
         return `
             <div>
+				<TK_Navigation props='${JSON.stringify(navBarProps)}' />
                 <TK_Header props='${JSON.stringify(headerProps)}' />
                 <div class="tk-card">
                     <TK_Input props='${JSON.stringify(inputProps)}' />
@@ -19,8 +20,6 @@ class ProfilePage extends TeleKitPage {
                 </div>
                 <TK_Button props='{"text": "Save Preference to Cloud", "onClick": "ProfilePage.saveToCloud()"}' />
                 <TK_Button props='{"text": "Load Preference from Cloud", "onClick": "ProfilePage.loadFromCloud()"}' />
-                
-                <TK_Navigation props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }
