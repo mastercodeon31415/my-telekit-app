@@ -57,13 +57,28 @@ class TeleKit {
     }
 
     navigateTo(pageName, props = {}) {
-        if (this.currentPage && this.currentPage.onLeave) this.currentPage.onLeave();
-        const page = this.pages[pageName];
-        if (page) {
-            this.currentPage = page;
+        const pageClass = this.pages[pageName];
+        if (pageClass) {
+            // Call onLeave on the OLD instance if it exists
+            if (this.currentPageInstance && this.currentPageInstance.onLeave) {
+                this.currentPageInstance.onLeave();
+            }
+
+            this.currentPageClass = pageClass;
             this.currentPageProps = props;
+            
+            // Create the new, persistent instance for the page
+            this.currentPageInstance = new this.currentPageClass(this);
+
             this.renderCurrentPage();
-        } else {
+            
+            // Call onLoad ONCE after the new page is created and rendered
+            if (this.currentPageInstance.onLoad) {
+                this.currentPageInstance.onLoad(this.currentPageProps);
+            }
+        }
+		else
+		{
             console.error(`Page "${pageName}" not found.`);
         }
     }
@@ -92,7 +107,7 @@ class TeleKit {
         }
 
         // We now call onLoad on the new instance
-        if (pageInstance.onLoad) pageInstance.onLoad(this.currentPageProps);
+        // if (pageInstance.onLoad) pageInstance.onLoad(this.currentPageProps);
     }
 	
 	openDrawer() {
