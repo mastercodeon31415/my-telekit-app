@@ -191,6 +191,65 @@ class TK_Navigation extends TeleKitComponent {
     }
 }
 
+class TK_Toggle extends TeleKitComponent {
+    render(props = {}) {
+        const label = props.label || '';
+        const checked = props.checked ? 'checked' : '';
+        const onChange = props.onChange || '';
+        return `
+            <label class="tk-toggle-wrapper">
+                <span class="tk-toggle-label">${label}</span>
+                <div class="tk-toggle">
+                    <input type="checkbox" ${checked} onchange="${onChange}">
+                    <span class="tk-toggle-slider"></span>
+                </div>
+            </label>
+        `;
+    }
+}
+
+class TK_Checkbox extends TeleKitComponent {
+    render(props = {}) {
+        const label = props.label || '';
+        const checked = props.checked ? 'checked' : '';
+        const onChange = props.onChange || '';
+        return `
+            <label class="tk-checkbox-wrapper">
+                <div class="tk-checkbox">
+                    <input type="checkbox" ${checked} onchange="${onChange}">
+                    <svg viewBox="0 0 24 24" class="tk-checkbox-checkmark">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <span class="tk-checkbox-label">${label}</span>
+            </label>
+        `;
+    }
+}
+
+class TK_Select extends TeleKitComponent {
+    render(props = {}) {
+        const label = props.label || '';
+        const selectedValue = props.selectedValue || '';
+        const onChange = props.onChange || '';
+        const options = props.options || [];
+
+        const optionsHtml = options.map(opt => {
+            const selected = opt.value === selectedValue ? 'selected' : '';
+            return `<option value="${opt.value}" ${selected}>${opt.text}</option>`;
+        }).join('');
+
+        return `
+            <div class="tk-select-wrapper">
+                <label class="tk-select-label">${label}</label>
+                <div class="tk-select-container">
+                    <select class="tk-select" onchange="${onChange}">${optionsHtml}</select>
+                </div>
+            </div>
+        `;
+    }
+}
+
 function registerTeleKitComponents(tkInstance) {
     // No changes here, just registering the component classes
     tkInstance.addComponent('TK_Header', new TK_Header());
@@ -201,4 +260,7 @@ function registerTeleKitComponents(tkInstance) {
     tkInstance.addComponent('TK_Modal', new TK_Modal());
 	tkInstance.addComponent('TK_NavBar', new TK_NavBar());
 	tkInstance.addComponent('TK_Navigation', new TK_Navigation());
+    tkInstance.addComponent('TK_Toggle', new TK_Toggle());
+    tkInstance.addComponent('TK_Checkbox', new TK_Checkbox());
+    tkInstance.addComponent('TK_Select', new TK_Select());
 }

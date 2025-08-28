@@ -3,34 +3,84 @@
 class SettingsPage extends TeleKitPage {
     constructor() {
         super();
-        // Page-specific event handlers can be defined here if needed
     }
 
     render(props = {}) {
-        const headerProps = { title: "Settings" };
-        const cardProps = {
-            title: "App Configuration",
-            content: "Options and settings for the app will appear here."
+        const navProps = { active: "settings", title: "Settings" };
+
+        const notificationToggleProps = {
+            label: "Enable Notifications",
+            checked: TK.state.settings.enableNotifications,
+            onChange: "SettingsPage.handleSettingChange('enableNotifications', this.checked)"
         };
-        const navBarProps = { active: "settings", title: "Settings" };
+
+        const previewsCheckboxProps = {
+            label: "Show Message Previews",
+            checked: TK.state.settings.showPreviews,
+            onChange: "SettingsPage.handleSettingChange('showPreviews', this.checked)"
+        };
+
+        const languageSelectProps = {
+            label: "Language",
+            selectedValue: TK.state.settings.language,
+            onChange: "SettingsPage.handleSettingChange('language', this.value)",
+            options: [
+                { value: 'en', text: 'English' },
+                { value: 'es', text: 'Español' },
+                { value: 'de', text: 'Deutsch' }
+            ]
+        };
+        
+        const saveButtonProps = {
+            text: "Save Settings",
+            onClick: "SettingsPage.handleSave()"
+        };
 
         return `
             <div>
-				<TK_Navigation props='${JSON.stringify(navBarProps)}' />
-                <TK_Header props='${JSON.stringify(headerProps)}' />
-                <TK_Card props='${JSON.stringify(cardProps)}' />
+                <TK_Navigation props='${JSON.stringify(navProps)}' />
+
+                <div class="tk-settings-group">
+                    <TK_Toggle props='${JSON.stringify(notificationToggleProps)}' />
+                    <TK_Checkbox props='${JSON.stringify(previewsCheckboxProps)}' />
+                </div>
+                
+                <div class="tk-settings-group">
+                    <TK_Select props='${JSON.stringify(languageSelectProps)}' />
+                </div>
+                
+                <TK_Button props='${JSON.stringify(saveButtonProps)}' />
             </div>
         `;
     }
 
     onLoad(props = {}) {
-        // Since navigation is handled by the NavBar, we hide the native buttons
+        // Hide native buttons as they are not needed on this page
         TK.mainButton.hide();
         TK.secondaryButton.hide();
         TK.backButton.hide();
     }
 
-    onLeave() {
-        // Clean up any listeners if they were added
+    // A single, generic handler for all setting changes
+    static handleSettingChange(key, value) {
+        // Update the state immutably
+        TK.setState({
+            settings: {
+                ...TK.state.settings, // Keep old settings
+                [key]: value          // Overwrite the changed one
+            }
+        });
     }
+
+    static handleSave() {
+        // In a real app, you would send TK.state.settings to your backend here
+        // const response = await TK.api.request('/save-settings', { body: TK.state.settings });
+        
+        // For the demo, we just show a confirmation
+        console.log('Saving settings:', TK.state.settings);
+        TK.showAlert('Settings saved successfully! (Check the console)');
+        TK.hapticFeedback.notificationOccurred('success');
+    }
+
+    onLeave() {}
 }
