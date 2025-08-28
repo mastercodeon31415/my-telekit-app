@@ -465,3 +465,16 @@ body {
     border-top: 6px solid var(--tg-theme-hint-color);
     pointer-events: none;
 }
+
+.tk-settings-category {
+    margin: 25px 0;
+}
+
+.tk-settings-category-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-theme-hint-color);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}

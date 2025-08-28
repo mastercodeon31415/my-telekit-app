@@ -4,23 +4,17 @@ class SettingsPage extends TeleKitPage {
     constructor() {
         super();
     }
+    
+    // Helper function to safely stringify and encode props
+    encodeProps(props) {
+        return JSON.stringify(props).replace(/"/g, '&quot;');
+    }
 
     render(props = {}) {
         const navProps = { active: "settings", title: "Settings" };
 
-        const notificationToggleProps = {
-            label: "Enable Notifications",
-            checked: TK.state.settings.enableNotifications,
-            onChange: "SettingsPage.handleSettingChange('enableNotifications', this.checked)"
-        };
-
-        const previewsCheckboxProps = {
-            label: "Show Message Previews",
-            checked: TK.state.settings.showPreviews,
-            onChange: "SettingsPage.handleSettingChange('showPreviews', this.checked)"
-        };
-
-        const languageSelectProps = {
+        // --- GENERAL SETTINGS ---
+        const languageSelectProps = this.encodeProps({
             label: "Language",
             selectedValue: TK.state.settings.language,
             onChange: "SettingsPage.handleSettingChange('language', this.value)",
@@ -29,54 +23,64 @@ class SettingsPage extends TeleKitPage {
                 { value: 'es', text: 'Español' },
                 { value: 'de', text: 'Deutsch' }
             ]
-        };
-        
-        const saveButtonProps = {
+        });
+
+        // --- NOTIFICATION SETTINGS ---
+        const notificationToggleProps = this.encodeProps({
+            label: "Enable Notifications",
+            checked: TK.state.settings.enableNotifications,
+            onChange: "SettingsPage.handleSettingChange('enableNotifications', this.checked)"
+        });
+        const previewsCheckboxProps = this.encodeProps({
+            label: "Show Message Previews",
+            checked: TK.state.settings.showPreviews,
+            onChange: "SettingsPage.handleSettingChange('showPreviews', this.checked)"
+        });
+
+        const saveButtonProps = this.encodeProps({
             text: "Save Settings",
             onClick: "SettingsPage.handleSave()"
-        };
+        });
 
         return `
             <div>
-                <TK_Navigation props='${JSON.stringify(navProps)}' />
+                <TK_Navigation props='${this.encodeProps(navProps)}' />
 
-                <div class="tk-settings-group">
-                    <TK_Toggle props='${JSON.stringify(notificationToggleProps)}' />
-                    <TK_Checkbox props='${JSON.stringify(previewsCheckboxProps)}' />
+                <!-- General Settings Category -->
+                <div class="tk-settings-category">
+                    <h3 class="tk-settings-category-title">General</h3>
+                    <div class="tk-card">
+                        <TK_Select props='${languageSelectProps}' />
+                    </div>
+                </div>
+
+                <!-- Notification Settings Category -->
+                <div class="tk-settings-category">
+                    <h3 class="tk-settings-category-title">Notifications</h3>
+                    <div class="tk-card">
+                        <TK_Toggle props='${notificationToggleProps}' />
+                        <TK_Checkbox props='${previewsCheckboxProps}' />
+                    </div>
                 </div>
                 
-                <div class="tk-settings-group">
-                    <TK_Select props='${JSON.stringify(languageSelectProps)}' />
-                </div>
-                
-                <TK_Button props='${JSON.stringify(saveButtonProps)}' />
+                <TK_Button props='${saveButtonProps}' />
             </div>
         `;
     }
 
     onLoad(props = {}) {
-        // Hide native buttons as they are not needed on this page
         TK.mainButton.hide();
         TK.secondaryButton.hide();
         TK.backButton.hide();
     }
 
-    // A single, generic handler for all setting changes
     static handleSettingChange(key, value) {
-        // Update the state immutably
         TK.setState({
-            settings: {
-                ...TK.state.settings, // Keep old settings
-                [key]: value          // Overwrite the changed one
-            }
+            settings: { ...TK.state.settings, [key]: value }
         });
     }
 
     static handleSave() {
-        // In a real app, you would send TK.state.settings to your backend here
-        // const response = await TK.api.request('/save-settings', { body: TK.state.settings });
-        
-        // For the demo, we just show a confirmation
         console.log('Saving settings:', TK.state.settings);
         TK.showAlert('Settings saved successfully! (Check the console)');
         TK.hapticFeedback.notificationOccurred('success');

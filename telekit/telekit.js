@@ -92,8 +92,14 @@ class TeleKit {
                 const propsMatch = tag.match(/props='(.*?)'/);
                 let childProps = {};
                 if (propsMatch && propsMatch[1]) {
-                    try { childProps = JSON.parse(propsMatch[1]); } 
-                    catch (e) { console.error(`Invalid JSON in props for component ${tagName}:`, e); }
+                    try {
+                        // --- THIS IS THE FIX ---
+                        // Decode the HTML entity for quotes before parsing
+                        const decodedProps = propsMatch[1].replace(/&quot;/g, '"');
+                        childProps = JSON.parse(decodedProps);
+                    } catch (e) {
+                        console.error(`Invalid JSON in props for component ${tagName}:`, e, propsMatch[1]);
+                    }
                 }
                 const childComponentTemplate = this.components[tagName];
                 const childHtml = this._renderComponent(childComponentTemplate, childProps);
