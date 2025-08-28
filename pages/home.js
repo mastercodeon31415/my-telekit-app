@@ -33,7 +33,7 @@ class HomePage extends TeleKitPage {
     }
     
     onLeave() {
-        this.tk.mainButton.offClick(addItemHandler);
+        this.tk.mainButton.offClick(this.addItemHandler);
         this.initialDataFetched = false;
     }
 }
