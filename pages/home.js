@@ -5,7 +5,7 @@ class HomePage extends TeleKitPage {
              TK.hapticFeedback.notificationOccurred('success');
         }
         initialDataFetched = false;
-    }
+    
 
     render() {
         const nav = this._c('TK_Navigation', { active: "home", title: "Home" });
