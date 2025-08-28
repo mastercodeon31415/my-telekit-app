@@ -4,7 +4,7 @@ class HomePage extends TeleKitPage {
              TK.setState({ items: [...TK.state.items, newItem] });
              TK.hapticFeedback.notificationOccurred('success');
         }
-        this.initialDataFetched = false;
+        initialDataFetched = false;
     }
 
     render() {
@@ -24,16 +24,16 @@ class HomePage extends TeleKitPage {
 
     onLoad() {
         this.tk.mainButton.setText('Add Item');
-        this.tk.mainButton.offClick(this.addItemHandler);
-        this.tk.mainButton.onClick(this.addItemHandler);
+        this.tk.mainButton.offClick(addItemHandler);
+        this.tk.mainButton.onClick(addItemHandler);
         this.tk.mainButton.show();
         this.tk.secondaryButton.hide();
         this.tk.backButton.hide();
-        if (!this.initialDataFetched) { this.initialDataFetched = true; }
+        if (!initialDataFetched) { initialDataFetched = true; }
     }
     
     onLeave() {
-        this.tk.mainButton.offClick(this.addItemHandler);
-        this.initialDataFetched = false;
+        this.tk.mainButton.offClick(addItemHandler);
+        initialDataFetched = false;
     }
 }
