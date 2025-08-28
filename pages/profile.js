@@ -9,7 +9,11 @@ class ProfilePage extends TeleKitPage {
             id: 'name-input', 
             label: 'User Name', 
             value: this.tk.state.userProfile.name, 
-            onInput: 'ProfilePage.updateName(this.value)' 
+            
+			// --- THIS IS THE CRITICAL FIX ---
+            // We now use onchange, which only fires when the input loses focus.
+            // This stops the re-render on every keystroke.
+            onChange: 'ProfilePage.updateName(this.value)' 
         });
         const saveButton = this._c('TK_Button', { text: "Save Profile to Cloud", onClick: "ProfilePage.saveToCloud()" }); // Updated text
         const loadButton = this._c('TK_Button', { text: "Load Profile from Cloud", onClick: "ProfilePage.loadFromCloud()" }); // Updated text
