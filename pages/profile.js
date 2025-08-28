@@ -7,8 +7,7 @@ class ProfilePage extends TeleKitPage {
         const nav = this._c('TK_Navigation', { active: "profile", title: "User Profile" });
         const input = this._c('TK_Input', { 
             id: 'name-input', 
-            label: 'User Name', 
-            value: this.tk.state.userProfile.name, 
+            label: 'User Name',
             
 			// --- THIS IS THE CRITICAL FIX ---
             // We now use onchange, which only fires when the input loses focus.
@@ -35,6 +34,14 @@ class ProfilePage extends TeleKitPage {
         this.tk.mainButton.hide();
         this.tk.secondaryButton.hide();
         this.tk.backButton.hide();
+		
+        // --- THIS IS THE KEY ---
+        // After the page renders, we find our input element and set its initial value.
+        // This only happens ONCE when the page loads, not on every keystroke.
+        const nameInput = document.getElementById('name-input');
+        if (nameInput) {
+            nameInput.value = this.tk.state.userProfile.name;
+        }
     }
     
     static updateName(newName) {

@@ -47,11 +47,9 @@ class TK_Input extends TeleKitComponent {
         const id = props.id || 'tk-input-' + Math.random().toString(36).substr(2, 9);
         const label = props.label || '';
         const placeholder = props.placeholder || '';
-        const value = props.value || '';
-        
-        // --- THIS IS THE CHANGE ---
+        // Note: The 'value' prop is now gone from this part of the render logic
+        const onChange = props.onChange || '';
         const onInput = props.onInput || '';
-        const onChange = props.onChange || ''; // Add this line
 
         const labelHtml = label ? `<label for="${id}" class="tk-input-label">${label}</label>` : '';
         return `
@@ -62,9 +60,8 @@ class TK_Input extends TeleKitComponent {
                     id="${id}"
                     class="tk-input"
                     placeholder="${placeholder}"
-                    value="${value}"
+                    onchange="${onChange}"
                     oninput="${onInput}"
-                    onchange="${onChange}" 
                 />
             </div>
         `;
