@@ -1,5 +1,5 @@
 class HomePage extends TeleKitPage {
-        this.addItemHandler = () => {
+        addItemHandler = () => {
              const newItem = `Item ${TK.state.items.length + 1}`;
              TK.setState({ items: [...TK.state.items, newItem] });
              TK.hapticFeedback.notificationOccurred('success');
