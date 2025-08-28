@@ -174,20 +174,20 @@ class TK_Navigation extends TeleKitComponent {
     }
 
     // --- METHODS ARE NO LONGER STATIC ---
-    openDrawer() {
+    TK.components.TK_Navigation.openDrawer = function() {
         document.getElementById('drawer-overlay')?.classList.add('visible');
         document.getElementById('drawer-panel')?.classList.add('visible');
         // Use the injected tk instance!
         this.tk.hapticFeedback.impactOccurred('light'); 
     }
 
-    closeDrawer() {
+    TK.components.TK_Navigation.closeDrawer = function() {
         document.getElementById('drawer-overlay')?.classList.remove('visible');
         document.getElementById('drawer-panel')?.classList.remove('visible');
     }
 
-    handleLinkClick(pageName) {
-        this.closeDrawer();
+     TK.components.TK_Navigation.handleLinkClick = function(pageName) {
+        closeDrawer();
         setTimeout(() => {
             // Use the injected tk instance!
             this.tk.navigateTo(pageName);
