@@ -108,14 +108,13 @@ class TK_NavBar extends TeleKitComponent {
     }
 }
 
-// --- REPLACE TK_NavBar WITH THIS NEW TK_Navigation CLASS ---
 class TK_Navigation extends TeleKitComponent {
     constructor(tk) {
         super(tk);
     }
     
     render(props = {}) {
-        if (this.config.navStyle === 'drawer') {
+        if (this.tk.config.navStyle === 'drawer') {
             return this.renderDrawer(props);
         } else {
             return this.renderBar(props);
