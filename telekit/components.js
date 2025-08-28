@@ -77,6 +77,30 @@ class TK_Modal extends TeleKitComponent {
     static hide(id) { /* ... same as before ... */ }
 }
 
+class TK_NavBar extends TeleKitComponent {
+    render(props = {}) {
+        const activeTab = props.active || 'home';
+        const tabs = [
+            { id: 'home', label: 'Home' },
+            { id: 'profile', label: 'Profile' },
+            { id: 'settings', label: 'Settings' },
+            { id: 'about', label: 'About' }
+        ];
+
+        const buttonsHtml = tabs.map(tab => {
+            const isActive = tab.id === activeTab;
+            const activeClass = isActive ? 'active' : '';
+            return `
+                <button class="tk-navbar-button ${activeClass}" onclick="TK.navigateTo('${tab.id}')">
+                    <span>${tab.label}</span>
+                </button>
+            `;
+        }).join('');
+
+        return `<div class="tk-navbar">${buttonsHtml}</div>`;
+    }
+}
+
 function registerTeleKitComponents(tkInstance) {
     // No changes here, just registering the component classes
     tkInstance.addComponent('TK_Header', new TK_Header());
@@ -85,4 +109,5 @@ function registerTeleKitComponents(tkInstance) {
     tkInstance.addComponent('TK_List', new TK_List());
     tkInstance.addComponent('TK_Input', new TK_Input());
     tkInstance.addComponent('TK_Modal', new TK_Modal());
+	tkInstance.addComponent('TK_NavBar', new TK_NavBar());
 }

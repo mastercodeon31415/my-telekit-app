@@ -17,6 +17,8 @@
     <!-- App Pages -->
     <script src="pages/home.js"></script>
     <script src="pages/profile.js"></script>
+	<script src="pages/settings.js"></script> <!-- Add new page -->
+    <script src="pages/about.js"></script>    <!-- Add new page -->
 
     <!-- App Initialization -->
     <script>
@@ -44,7 +46,9 @@
             // Register pages
             TK.addPage('home', new HomePage());
             TK.addPage('profile', new ProfilePage());
-            
+			TK.addPage('settings', new SettingsPage()); // Add new page
+            TK.addPage('about', new AboutPage());       // Add new page
+			
             // Set the initial page
             TK.navigateTo('home');
         });

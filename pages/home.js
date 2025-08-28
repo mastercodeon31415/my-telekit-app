@@ -3,49 +3,43 @@
 class HomePage extends TeleKitPage {
     constructor() {
         super();
-        // Define handlers once so we can reference them for removal
-        this.navigateToProfileHandler = () => TK.navigateTo('profile');
-        this.showModalHandler = () => TK.components.TK_Modal.show('welcomeModal');
+        this.addItemHandler = () => {
+             const newItem = `Item ${TK.state.items.length + 1}`;
+             TK.setState({ items: [...TK.state.items, newItem] });
+             TK.hapticFeedback.notificationOccurred('success');
+        }
         this.initialDataFetched = false;
     }
 
     render() {
-        const headerProps = { title: "TeleKit Pro" };
-        const cardProps = { title: `Welcome, ${TK.state.userProfile.name}`, content: "This app demonstrates advanced TeleKit features." };
+        const headerProps = { title: "Home" }; // Changed title for clarity
+        const cardProps = { title: `Welcome, ${TK.state.userProfile.name}`, content: "This is the main page of the application." };
         const listProps = { items: TK.state.items };
-        const modalProps = { id: "welcomeModal", title: "Hello!", content: "This is a modal component." };
+        const navBarProps = { active: "home" };
 
-        // We have removed the old in-page buttons for navigation
         return `
             <div>
                 <TK_Header props='${JSON.stringify(headerProps)}' />
                 <TK_Card props='${JSON.stringify(cardProps)}' />
                 <h3>My Items:</h3>
                 <TK_List props='${JSON.stringify(listProps)}' />
-                <TK_Modal props='${JSON.stringify(modalProps)}' />
+                <TK_NavBar props='${JSON.stringify(navBarProps)}' />
             </div>
         `;
     }
 
     onLoad() {
-        // --- THE LISTENER FIX & NEW BUTTON SETUP ---
-
-        // Main Button (for navigation)
-        TK.mainButton.setText('View Profile');
-        TK.mainButton.offClick(this.navigateToProfileHandler); // Remove old listener first
-        TK.mainButton.onClick(this.navigateToProfileHandler);  // Add the new one
+        // The Main Button is now for page-specific actions, not navigation
+        TK.mainButton.setText('Add Item');
+        TK.mainButton.offClick(this.addItemHandler); // Always remove before adding
+        TK.mainButton.onClick(this.addItemHandler);
         TK.mainButton.show();
 
-        // Secondary Button (for the modal)
-        TK.app.SecondaryButton.setText('Show Modal');
-        TK.app.SecondaryButton.offClick(this.showModalHandler); // Remove old listener first
-        TK.app.SecondaryButton.onClick(this.showModalHandler);  // Add the new one
-        TK.app.SecondaryButton.show();
-
+        // Hide other native buttons
+        TK.secondaryButton.hide();
         TK.backButton.hide();
 
         if (!this.initialDataFetched) {
-            // We'll comment this out to prevent the API error for now
             // this.fetchInitialData();
             this.initialDataFetched = true;
         }
@@ -59,12 +53,8 @@ class HomePage extends TeleKitPage {
     }
 
     onLeave() {
-        // Correctly remove the specific handlers
-        TK.mainButton.offClick(this.navigateToProfileHandler);
-        TK.app.SecondaryButton.offClick(this.showModalHandler);
-        // Hide the secondary button when we leave the page
-        TK.app.SecondaryButton.hide();
-
+        // Clean up page-specific listeners
+        TK.mainButton.offClick(this.addItemHandler);
         this.initialDataFetched = false;
     }
 }
