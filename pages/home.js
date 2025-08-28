@@ -1,6 +1,6 @@
 class HomePage extends TeleKitPage {
-    constructor() {
-        super();
+    constructor(tk) {
+        super(tk); // Pass tk to the parent
         this.addItemHandler = () => {
              const newItem = `Item ${TK.state.items.length + 1}`;
              TK.setState({ items: [...TK.state.items, newItem] });
@@ -25,17 +25,17 @@ class HomePage extends TeleKitPage {
     }
 
     onLoad() {
-        TK.mainButton.setText('Add Item');
-        TK.mainButton.offClick(this.addItemHandler);
-        TK.mainButton.onClick(this.addItemHandler);
-        TK.mainButton.show();
-        TK.secondaryButton.hide();
-        TK.backButton.hide();
+        this.mainButton.setText('Add Item');
+        this.mainButton.offClick(this.addItemHandler);
+        this.mainButton.onClick(this.addItemHandler);
+        this.mainButton.show();
+        this.secondaryButton.hide();
+        this.backButton.hide();
         if (!this.initialDataFetched) { this.initialDataFetched = true; }
     }
     
     onLeave() {
-        TK.mainButton.offClick(this.addItemHandler);
+        this.mainButton.offClick(this.addItemHandler);
         this.initialDataFetched = false;
     }
 }

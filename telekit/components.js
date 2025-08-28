@@ -1,6 +1,7 @@
 // telekit/components.js
 
 class TK_Header extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const title = props.title || 'Page Title';
         return `<h1 class="tk-header">${title}</h1>`;
@@ -8,6 +9,7 @@ class TK_Header extends TeleKitComponent {
 }
 
 class TK_Button extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const text = props.text || 'Click Me';
         const onClickAction = props.onClick || "TK.showAlert('Button clicked')";
@@ -17,6 +19,7 @@ class TK_Button extends TeleKitComponent {
 }
 
 class TK_Card extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const title = props.title ? `<h3 class="tk-card-title">${props.title}</h3>` : '';
         const content = props.content || 'Card content goes here.';
@@ -30,6 +33,7 @@ class TK_Card extends TeleKitComponent {
 }
 
 class TK_List extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const items = props.items || [];
         const listItems = items.map(item => `<li class="tk-list-item">${item}</li>`).join('');
@@ -38,6 +42,7 @@ class TK_List extends TeleKitComponent {
 }
 
 class TK_Input extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const id = props.id || 'tk-input-' + Math.random().toString(36).substr(2, 9);
         const label = props.label || '';
@@ -55,6 +60,7 @@ class TK_Input extends TeleKitComponent {
 }
 
 class TK_Modal extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const id = props.id;
         const title = props.title || 'Modal';
@@ -78,6 +84,7 @@ class TK_Modal extends TeleKitComponent {
 }
 
 class TK_NavBar extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const activeTab = props.active || 'home';
         const tabs = [
@@ -103,30 +110,26 @@ class TK_NavBar extends TeleKitComponent {
 
 // --- REPLACE TK_NavBar WITH THIS NEW TK_Navigation CLASS ---
 class TK_Navigation extends TeleKitComponent {
+    constructor(tk) {
+        super(tk);
+    }
+    
     render(props = {}) {
-        // This component now decides what to render based on the global config
-        if (TK.config.navStyle === 'drawer') {
+        if (this.tk.config.navStyle === 'drawer') {
             return this.renderDrawer(props);
-        } else { // Default to 'bar'
+        } else {
             return this.renderBar(props);
         }
     }
 
-    // Renders the top bar with hamburger icon
     renderDrawer(props) {
         const title = props.title || 'TeleKit App';
-        const activeTab = props.active || 'home';
-
-        // The drawer itself will be rendered into the separate #drawer-container
-        // This is a "portal" pattern. We call a method to render it separately.
-        this.renderDrawerMenu(activeTab);
+        this.renderDrawerMenu(props.active || 'home');
 
         return `
             <div class="tk-top-bar">
-                <button class="tk-hamburger-button" onclick="TK_Navigation.openDrawer()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <button class="tk-hamburger-button" onclick="TK.components.TK_Navigation.openDrawer()">
+                    <span></span><span></span><span></span>
                 </button>
                 <h1 class="tk-top-bar-title">${title}</h1>
             </div>
@@ -170,28 +173,30 @@ class TK_Navigation extends TeleKitComponent {
         return `<div class="tk-navbar">${buttonsHtml}</div>`;
     }
 
-    // --- Static methods to control the drawer from anywhere ---
-    static openDrawer() {
+    // --- METHODS ARE NO LONGER STATIC ---
+    openDrawer() {
         document.getElementById('drawer-overlay')?.classList.add('visible');
         document.getElementById('drawer-panel')?.classList.add('visible');
-        TK.hapticFeedback.impactOccurred('light');
+        // Use the injected tk instance!
+        this.tk.hapticFeedback.impactOccurred('light'); 
     }
 
-    static closeDrawer() {
+    closeDrawer() {
         document.getElementById('drawer-overlay')?.classList.remove('visible');
         document.getElementById('drawer-panel')?.classList.remove('visible');
     }
 
-    static handleLinkClick(pageName) {
-        // First close the drawer, then navigate for a smooth UX
+    handleLinkClick(pageName) {
         this.closeDrawer();
         setTimeout(() => {
-            TK.navigateTo(pageName);
-        }, 200); // 200ms matches the CSS transition duration
+            // Use the injected tk instance!
+            this.tk.navigateTo(pageName);
+        }, 200);
     }
 }
 
 class TK_Toggle extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const label = props.label || '';
         const checked = props.checked ? 'checked' : '';
@@ -209,6 +214,7 @@ class TK_Toggle extends TeleKitComponent {
 }
 
 class TK_Checkbox extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const label = props.label || '';
         const checked = props.checked ? 'checked' : '';
@@ -228,6 +234,7 @@ class TK_Checkbox extends TeleKitComponent {
 }
 
 class TK_Select extends TeleKitComponent {
+	constructor(tk) { super(tk); }
     render(props = {}) {
         const label = props.label || '';
         const selectedValue = props.selectedValue || '';

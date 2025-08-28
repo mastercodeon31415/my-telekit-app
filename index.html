@@ -24,6 +24,7 @@
     <!-- App Initialization -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+		
             // Initialize TeleKit with a global state and API URL
             const TK = new TeleKit({
 				// CHOOSE YOUR NAVIGATION STYLE HERE: 'drawer' or 'bar'
@@ -55,10 +56,10 @@
             registerTeleKitComponents(TK);
 
             // Register pages
-            TK.addPage('home', new HomePage());
-            TK.addPage('profile', new ProfilePage());
-			TK.addPage('settings', new SettingsPage()); // Add new page
-            TK.addPage('about', new AboutPage());       // Add new page
+            TK.addPage('home', new HomePage(TK));
+            TK.addPage('profile', new ProfilePage(TK));
+			TK.addPage('settings', new SettingsPage(TK)); // Add new page
+            TK.addPage('about', new AboutPage(TK));       // Add new page
 			
             // Set the initial page
             TK.navigateTo('home');

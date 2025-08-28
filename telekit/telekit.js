@@ -90,13 +90,20 @@ class TeleKit {
 }
 
 class TeleKitComponent {
+    constructor(tk) {
+        // Store the main TeleKit instance
+        this.tk = tk; 
+    }
     render(props = {}) { throw new Error("Component must implement the 'render' method!"); }
 }
+
 class TeleKitPage extends TeleKitComponent {
+    constructor(tk) {
+        super(tk); // Pass the instance up to the parent
+    }
     onLoad(props) {}
     onLeave() {}
     
-    // --- NEW HELPER FOR CHILD COMPONENTS ---
     _c(componentName, props = {}) {
         const id = `tk-comp-${Math.random().toString(36).substr(2, 9)}`;
         this._componentMap = this._componentMap || {};
@@ -104,10 +111,9 @@ class TeleKitPage extends TeleKitComponent {
         return `<div id="${id}"></div>`;
     }
 
-    // --- NEW HELPER TO WRAP RENDER OUTPUT ---
     _render(html) {
         const map = this._componentMap;
-        this._componentMap = {}; // Reset for next render
+        this._componentMap = {};
         return { html, componentMap: map };
     }
 }
