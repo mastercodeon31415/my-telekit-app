@@ -41,7 +41,7 @@ class HomePage extends TeleKitPage {
         TK.mainButton.onClick(this.mainButtonHandler);
 
         TK.backButton.hide();
-        this.fetchInitialData();
+        //this.fetchInitialData();
     }
 
     async fetchInitialData() {
