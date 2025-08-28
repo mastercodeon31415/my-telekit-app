@@ -26,7 +26,29 @@ class ProfilePage extends TeleKitPage {
     }
     
     static updateName(newName) { TK.setState({ userProfile: { ...TK.state.userProfile, name: newName } }); }
-    static saveToCloud() { /* ... */ }
-    static loadFromCloud() { /* ... */ }
+    static saveToCloud() {
+        // Use the global TK instance to access CloudStorage
+        TK.cloudStorage.setItem('user_name', TK.state.userProfile.name, (err, success) => {
+            if (success) {
+                TK.showAlert('Name saved to cloud storage!');
+                TK.hapticFeedback.notificationOccurred('success');
+            } else {
+                TK.showAlert(`Error saving to cloud: ${err}`);
+            }
+        });
+    }
+
+    static loadFromCloud() {
+        // Use the global TK instance to access CloudStorage
+        TK.cloudStorage.getItem('user_name', (err, value) => {
+            if (value) {
+                TK.showAlert(`Loaded "${value}" from cloud.`);
+                // Call the static updateName method to update the state
+                ProfilePage.updateName(value);
+            } else {
+                TK.showAlert(`Could not load from cloud: ${err || 'No value set'}`);
+            }
+        });
+    }
     onLeave() {}
 }
